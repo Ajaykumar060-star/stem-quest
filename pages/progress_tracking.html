@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Progress Tracking - STEM Quest</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fstemquest2030back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+<script src="../public/auth.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-background to-secondary-50">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.5"/>
+                </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid)"/>
+        </svg>
+    </div>
+
+    <!-- Header -->
+    <header class="relative z-10 bg-white border-b border-border shadow-subtle">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Navigation -->
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-text-primary">STEM Quest</h1>
+                            <p class="text-xs text-text-secondary">Progress Tracking</p>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Menu -->
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="student_dashboard.html" class="text-text-secondary hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            Dashboard
+                        </a>
+                        <a href="game_selection.html" class="text-text-secondary hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            Games
+                        </a>
+                        <a href="progress_tracking.html" class="text-primary-600 bg-primary-50 px-3 py-2 rounded-md text-sm font-medium">
+                            Progress
+                        </a>
+                        <a href="student_profile.html" class="text-text-secondary hover:text-primary-600 px-3 py-2 rounded-md text-sm font-medium transition-colors">
+                            Profile
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- User Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Offline Status -->
+                    <div class="flex items-center space-x-2 px-3 py-1 bg-success-50 border border-success-100 rounded-full">
+                        <div class="w-2 h-2 bg-success-600 rounded-full animate-pulse"></div>
+                        <span class="text-sm font-medium text-success-600">Offline Ready</span>
+                    </div>
+
+                    <!-- Language Selector -->
+                    <div class="relative">
+                        <select class="appearance-none bg-white border border-border rounded-lg px-3 py-2 pr-8 text-sm font-medium text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="bn">বাংলা</option>
+                            <option value="te">తెలుగు</option>
+                            <option value="ta">தமிழ்</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                            <svg class="w-4 h-4 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button class="md:hidden p-2 rounded-md text-text-secondary hover:text-text-primary hover:bg-surface transition-colors" onclick="toggleMobileMenu()">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation Menu -->
+            <div class="md:hidden hidden" id="mobileMenu">
+                <div class="px-2 pt-2 pb-3 space-y-1 border-t border-border">
+                    <a href="student_dashboard.html" class="block px-3 py-2 rounded-md text-base font-medium text-text-secondary hover:text-primary-600 hover:bg-primary-50 transition-colors">
+                        Dashboard
+                    </a>
+                    <a href="game_selection.html" class="block px-3 py-2 rounded-md text-base font-medium text-text-secondary hover:text-primary-600 hover:bg-primary-50 transition-colors">
+                        Games
+                    </a>
+                    <a href="progress_tracking.html" class="block px-3 py-2 rounded-md text-base font-medium text-primary-600 bg-primary-50">
+                        Progress
+                    </a>
+                    <a href="student_profile.html" class="block px-3 py-2 rounded-md text-base font-medium text-text-secondary hover:text-primary-600 hover:bg-primary-50 transition-colors">
+                        Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between">
+                <div>
+                    <h2 class="text-3xl font-bold text-text-primary mb-2">Your Learning Progress</h2>
+                    <p class="text-text-secondary">Track your STEM journey and celebrate achievements</p>
+                </div>
+                <div class="mt-4 sm:mt-0 flex items-center space-x-3">
+                    <!-- Export Button -->
+                    <button class="btn-outline flex items-center space-x-2">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 10v6m0 0l-4-4m4 4l4-4m3-5a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <span>Export Report</span>
+                    </button>
+                    <!-- Goal Setting Button -->
+                    <button class="btn-primary flex items-center space-x-2" onclick="openGoalModal()">
+                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                        </svg>
+                        <span>Set Goals</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="card p-6 mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-3 sm:space-y-0 sm:space-x-4">
+                    <!-- Date Range Filter -->
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                        </svg>
+                        <select class="input text-sm">
+                            <option value="7">Last 7 days</option>
+                            <option value="30" selected>Last 30 days</option>
+                            <option value="90">Last 3 months</option>
+                            <option value="365">Last year</option>
+                        </select>
+                    </div>
+
+                    <!-- Subject Filter -->
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
+                        </svg>
+                        <select class="input text-sm">
+                            <option value="all">All Subjects</option>
+                            <option value="math">Mathematics</option>
+                            <option value="science">Science</option>
+                            <option value="technology">Technology</option>
+                            <option value="engineering">Engineering</option>
+                        </select>
+                    </div>
+
+                    <!-- Difficulty Filter -->
+                    <div class="flex items-center space-x-2">
+                        <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                        <select class="input text-sm">
+                            <option value="all">All Levels</option>
+                            <option value="beginner">Beginner</option>
+                            <option value="intermediate">Intermediate</option>
+                            <option value="advanced">Advanced</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Reset Filters -->
+                <button class="btn-outline text-sm flex items-center space-x-2" onclick="resetFilters()">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                    </svg>
+                    <span>Reset</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Overall Statistics -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+            <!-- Games Completed -->
+            <div class="card p-6 hover-lift">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-text-secondary">Games Completed</p>
+                        <p class="text-2xl font-bold text-text-primary">47</p>
+                        <p class="text-sm text-success-600">+5 this week</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Points Earned -->
+            <div class="card p-6 hover-lift">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-accent-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-accent-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-text-secondary">Points Earned</p>
+                        <p class="text-2xl font-bold text-text-primary">2,847</p>
+                        <p class="text-sm text-success-600">+320 this week</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Time Spent -->
+            <div class="card p-6 hover-lift">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-secondary-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-secondary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-text-secondary">Time Spent</p>
+                        <p class="text-2xl font-bold text-text-primary">24h 15m</p>
+                        <p class="text-sm text-success-600">+3h 20m this week</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Current Level -->
+            <div class="card p-6 hover-lift">
+                <div class="flex items-center">
+                    <div class="flex-shrink-0">
+                        <div class="w-12 h-12 bg-primary-100 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="ml-4">
+                        <p class="text-sm font-medium text-text-secondary">Current Level</p>
+                        <p class="text-2xl font-bold text-text-primary">Grade 8</p>
+                        <p class="text-sm text-primary-600">Advanced Learner</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Charts -->
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+            <!-- Performance Trends -->
+            <div class="card p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-lg font-semibold text-text-primary">Performance Trends</h3>
+                    <div class="flex items-center space-x-2">
+                        <button class="px-3 py-1 text-sm bg-primary-100 text-primary-600 rounded-md font-medium">Weekly</button>
+                        <button class="px-3 py-1 text-sm text-text-secondary hover:bg-surface rounded-md font-medium">Monthly</button>
+                    </div>
+                </div>
+                <div class="h-64 bg-surface-100 rounded-lg flex items-center justify-center relative overflow-hidden">
+                    <!-- Chart Placeholder with SVG -->
+                    <svg class="w-full h-full" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+                        <!-- Grid Lines -->
+                        <defs>
+                            <pattern id="chartGrid" width="40" height="20" patternUnits="userSpaceOnUse">
+                                <path d="M 40 0 L 0 0 0 20" fill="none" stroke="#E5E7EB" stroke-width="1"/>
+                            </pattern>
+                        </defs>
+                        <rect width="400" height="200" fill="url(#chartGrid)" opacity="0.5"/>
+                        
+                        <!-- Performance Line -->
+                        <polyline fill="none" stroke="#2563EB" stroke-width="3" points="20,160 80,140 140,120 200,100 260,80 320,60 380,40"/>
+                        
+                        <!-- Data Points -->
+                        <circle cx="20" cy="160" r="4" fill="#2563EB"/>
+                        <circle cx="80" cy="140" r="4" fill="#2563EB"/>
+                        <circle cx="140" cy="120" r="4" fill="#2563EB"/>
+                        <circle cx="200" cy="100" r="4" fill="#2563EB"/>
+                        <circle cx="260" cy="80" r="4" fill="#2563EB"/>
+                        <circle cx="320" cy="60" r="4" fill="#2563EB"/>
+                        <circle cx="380" cy="40" r="4" fill="#2563EB"/>
+                        
+                        <!-- Labels -->
+                        <text x="20" y="190" text-anchor="middle" class="text-xs fill-current text-text-tertiary">Mon</text>
+                        <text x="80" y="190" text-anchor="middle" class="text-xs fill-current text-text-tertiary">Tue</text>
+                        <text x="140" y="190" text-anchor="middle" class="text-xs fill-current text-text-tertiary">Wed</text>
+                        <text x="200" y="190" text-anchor="middle" class="text-xs fill-current text-text-tertiary">Thu</text>
+                        <text x="260" y="190" text-anchor="middle" class="text-xs fill-current text-text-tertiary">Fri</text>
+                        <text x="320" y="190" text-anchor="middle" class="text-xs fill-current text-text-tertiary">Sat</text>
+                        <text x="380" y="190" text-anchor="middle" class="text-xs fill-current text-text-tertiary">Sun</text>
+                    </svg>
+                </div>
+                <div class="mt-4 flex items-center justify-center space-x-6">
+                    <div class="flex items-center space-x-2">
+                        <div class="w-3 h-3 bg-primary-600 rounded-full"></div>
+                        <span class="text-sm text-text-secondary">Performance Score</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Subject Breakdown -->
+            <div class="card p-6">
+                <h3 class="text-lg font-semibold text-text-primary mb-6">Subject Performance</h3>
+                <div class="space-y-6">
+                    <!-- Mathematics -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-text-primary">Mathematics</span>
+                            <span class="text-sm text-text-secondary">92%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-primary-600" style="width: 92%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Science -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-text-primary">Science</span>
+                            <span class="text-sm text-text-secondary">87%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-secondary-600" style="width: 87%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Technology -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-text-primary">Technology</span>
+                            <span class="text-sm text-text-secondary">78%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-accent-600" style="width: 78%"></div>
+                        </div>
+                    </div>
+
+                    <!-- Engineering -->
+                    <div>
+                        <div class="flex items-center justify-between mb-2">
+                            <span class="text-sm font-medium text-text-primary">Engineering</span>
+                            <span class="text-sm text-text-secondary">84%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill bg-primary-500" style="width: 84%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Subject Insights -->
+                <div class="mt-6 p-4 bg-primary-50 rounded-lg">
+                    <div class="flex items-start space-x-3">
+                        <svg class="w-5 h-5 text-primary-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <div>
+                            <p class="text-sm font-medium text-primary-700">Strength: Mathematics</p>
+                            <p class="text-sm text-primary-600">You're excelling in algebra and geometry concepts!</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Achievement Gallery -->
+        <div class="card p-6 mb-8">
+            <div class="flex items-center justify-between mb-6">
+                <h3 class="text-lg font-semibold text-text-primary">Recent Achievements</h3>
+                <a href="javascript:void(0)" class="text-sm text-primary-600 hover:text-primary-700 font-medium">View All</a>
+            </div>
+            
+            <div class="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-4">
+                <!-- Achievement Badge 1 -->
+                <div class="text-center group cursor-pointer">
+                    <div class="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-accent-400 to-accent-600 rounded-full flex items-center justify-center shadow-elevated group-hover:shadow-floating transition-all duration-200">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                    </div>
+                    <p class="text-xs font-medium text-text-primary">Math Master</p>
+                    <p class="text-xs text-text-tertiary">Sep 14</p>
+                </div>
+
+                <!-- Achievement Badge 2 -->
+                <div class="text-center group cursor-pointer">
+                    <div class="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-full flex items-center justify-center shadow-elevated group-hover:shadow-floating transition-all duration-200">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                        </svg>
+                    </div>
+                    <p class="text-xs font-medium text-text-primary">Speed Learner</p>
+                    <p class="text-xs text-text-tertiary">Sep 12</p>
+                </div>
+
+                <!-- Achievement Badge 3 -->
+                <div class="text-center group cursor-pointer">
+                    <div class="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center shadow-elevated group-hover:shadow-floating transition-all duration-200">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </div>
+                    <p class="text-xs font-medium text-text-primary">Science Explorer</p>
+                    <p class="text-xs text-text-tertiary">Sep 10</p>
+                </div>
+
+                <!-- Achievement Badge 4 -->
+                <div class="text-center group cursor-pointer">
+                    <div class="w-16 h-16 mx-auto mb-2 bg-gradient-to-br from-purple-400 to-purple-600 rounded-full flex items-center justify-center shadow-elevated group-hover:shadow-floating transition-all duration-200">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.746 0 3.332.477 4.5 1.253v13C19.832 18.477 18.246 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"/>
+                        </svg>
+                    </div>
+                    <p class="text-xs font-medium text-text-primary">Knowledge Seeker</p>
+                    <p class="text-xs text-text-tertiary">Sep 8</p>
+                </div>
+
+                <!-- Locked Achievement -->
+                <div class="text-center group cursor-pointer opacity-50">
+                    <div class="w-16 h-16 mx-auto mb-2 bg-surface-200 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <p class="text-xs font-medium text-text-tertiary">Locked</p>
+                    <p class="text-xs text-text-tertiary">Complete 5 more games</p>
+                </div>
+
+                <!-- Locked Achievement -->
+                <div class="text-center group cursor-pointer opacity-50">
+                    <div class="w-16 h-16 mx-auto mb-2 bg-surface-200 rounded-full flex items-center justify-center">
+                        <svg class="w-8 h-8 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                        </svg>
+                    </div>
+                    <p class="text-xs font-medium text-text-tertiary">Locked</p>
+                    <p class="text-xs text-text-tertiary">Reach Level 10</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Learning Path Visualization -->
+        <div class="card p-6 mb-8">
+            <h3 class="text-lg font-semibold text-text-primary mb-6">Learning Path Progress</h3>
+            
+            <div class="relative">
+                <!-- Progress Line -->
+                <div class="absolute left-8 top-8 bottom-8 w-0.5 bg-surface-200"></div>
+                <div class="absolute left-8 top-8 w-0.5 bg-primary-600" style="height: 60%"></div>
+                
+                <div class="space-y-8">
+                    <!-- Completed Module -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-4 h-4 bg-primary-600 rounded-full border-4 border-white shadow-sm relative z-10"></div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-sm font-medium text-text-primary">Basic Algebra</h4>
+                                <span class="text-xs text-success-600 bg-success-50 px-2 py-1 rounded-full">Completed</span>
+                            </div>
+                            <p class="text-sm text-text-secondary mt-1">Master fundamental algebraic concepts and equations</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-text-tertiary">8 games completed</span>
+                                <span class="text-xs text-text-tertiary">Score: 92%</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Current Module -->
+                    <div class="flex items-start space-x-4">
+                        <div class="w-4 h-4 bg-accent-500 rounded-full border-4 border-white shadow-sm relative z-10 animate-pulse"></div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-sm font-medium text-text-primary">Geometry Fundamentals</h4>
+                                <span class="text-xs text-accent-600 bg-accent-50 px-2 py-1 rounded-full">In Progress</span>
+                            </div>
+                            <p class="text-sm text-text-secondary mt-1">Explore shapes, angles, and spatial relationships</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-text-tertiary">3 of 6 games completed</span>
+                                <div class="flex-1 max-w-32">
+                                    <div class="progress-bar h-1">
+                                        <div class="progress-fill bg-accent-500 h-1" style="width: 50%"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Upcoming Module -->
+                    <div class="flex items-start space-x-4 opacity-60">
+                        <div class="w-4 h-4 bg-surface-300 rounded-full border-4 border-white shadow-sm relative z-10"></div>
+                        <div class="flex-1">
+                            <div class="flex items-center justify-between">
+                                <h4 class="text-sm font-medium text-text-primary">Advanced Functions</h4>
+                                <span class="text-xs text-text-tertiary bg-surface-100 px-2 py-1 rounded-full">Locked</span>
+                            </div>
+                            <p class="text-sm text-text-secondary mt-1">Dive into complex mathematical functions and graphs</p>
+                            <div class="flex items-center space-x-4 mt-2">
+                                <span class="text-xs text-text-tertiary">Unlock after completing Geometry</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Performance Comparison -->
+        <div class="card p-6">
+            <h3 class="text-lg font-semibold text-text-primary mb-6">Performance Comparison</h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <!-- Your Performance -->
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-primary-500 to-primary-600 rounded-full flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white">85%</span>
+                    </div>
+                    <h4 class="text-sm font-medium text-text-primary">Your Average</h4>
+                    <p class="text-xs text-text-secondary">Across all subjects</p>
+                </div>
+
+                <!-- Class Average -->
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-surface-300 to-surface-400 rounded-full flex items-center justify-center">
+                        <span class="text-2xl font-bold text-text-primary">78%</span>
+                    </div>
+                    <h4 class="text-sm font-medium text-text-primary">Class Average</h4>
+                    <p class="text-xs text-text-secondary">Grade 8 students</p>
+                </div>
+
+                <!-- Grade Level -->
+                <div class="text-center">
+                    <div class="w-20 h-20 mx-auto mb-4 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-full flex items-center justify-center">
+                        <span class="text-2xl font-bold text-white">82%</span>
+                    </div>
+                    <h4 class="text-sm font-medium text-text-primary">Grade Average</h4>
+                    <p class="text-xs text-text-secondary">All Grade 8 students</p>
+                </div>
+            </div>
+
+            <div class="mt-6 p-4 bg-success-50 rounded-lg">
+                <div class="flex items-start space-x-3">
+                    <svg class="w-5 h-5 text-success-600 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                    </svg>
+                    <div>
+                        <p class="text-sm font-medium text-success-700">Great Progress!</p>
+                        <p class="text-sm text-success-600">You're performing 7% above your class average. Keep up the excellent work!</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Goal Setting Modal -->
+    <div class="fixed inset-0 bg-black bg-opacity-50 hidden z-50" id="goalModal">
+        <div class="flex items-center justify-center min-h-screen px-4">
+            <div class="card max-w-md w-full p-6">
+                <div class="flex items-center justify-between mb-4">
+                    <h3 class="text-lg font-semibold text-text-primary">Set Learning Goals</h3>
+                    <button onclick="closeGoalModal()" class="text-text-tertiary hover:text-text-secondary">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+                
+                <form class="space-y-4">
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-2">Weekly Goal</label>
+                        <select class="input">
+                            <option>Complete 5 games per week</option>
+                            <option>Complete 10 games per week</option>
+                            <option>Complete 15 games per week</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-2">Focus Subject</label>
+                        <select class="input">
+                            <option>Mathematics</option>
+                            <option>Science</option>
+                            <option>Technology</option>
+                            <option>Engineering</option>
+                        </select>
+                    </div>
+                    
+                    <div>
+                        <label class="block text-sm font-medium text-text-primary mb-2">Target Score</label>
+                        <select class="input">
+                            <option>80% or higher</option>
+                            <option>85% or higher</option>
+                            <option>90% or higher</option>
+                            <option>95% or higher</option>
+                        </select>
+                    </div>
+                    
+                    <div class="flex space-x-3 pt-4">
+                        <button type="button" onclick="closeGoalModal()" class="btn-outline flex-1">Cancel</button>
+                        <button type="submit" class="btn-primary flex-1">Set Goals</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Background Decoration -->
+    <div class="fixed bottom-0 left-0 w-64 h-64 opacity-10 pointer-events-none">
+        <img src="https://images.pixabay.com/photos/2016/11/19/14/00/code-1839406_960_720.jpg" alt="STEM Learning" class="w-full h-full object-cover rounded-tr-full" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+    </div>
+
+    <script>
+        // Auth guard
+        if (window.STEMQUEST_AUTH && !STEMQUEST_AUTH.requireAuth()) {
+            // requireAuth will redirect; stop further execution
+        }
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Goal modal functions
+        function openGoalModal() {
+            document.getElementById('goalModal').classList.remove('hidden');
+        }
+
+        function closeGoalModal() {
+            document.getElementById('goalModal').classList.add('hidden');
+        }
+
+        // Filter reset function
+        function resetFilters() {
+            const selects = document.querySelectorAll('select');
+            selects.forEach(select => {
+                if (select.options[0]) {
+                    select.selectedIndex = 0;
+                }
+            });
+        }
+
+        // Language selector functionality
+        document.querySelector('select').addEventListener('change', function(e) {
+            const selectedLang = e.target.value;
+            localStorage.setItem('stemquest_language', selectedLang);
+            console.log('Language changed to:', selectedLang);
+        });
+
+        // Load saved language preference
+        window.addEventListener('load', function() {
+            const savedLang = localStorage.getItem('stemquest_language');
+            if (savedLang) {
+                document.querySelector('select').value = savedLang;
+            }
+        });
+
+        // Chart interaction simulation
+        document.addEventListener('DOMContentLoaded', function() {
+            // Simulate real-time data updates
+            setInterval(function() {
+                const circles = document.querySelectorAll('svg circle');
+                circles.forEach(circle => {
+                    circle.style.opacity = Math.random() > 0.5 ? '1' : '0.7';
+                });
+            }, 3000);
+        });
+
+        // Achievement hover effects
+        document.querySelectorAll('.group').forEach(badge => {
+            badge.addEventListener('mouseenter', function() {
+                this.style.transform = 'scale(1.05)';
+            });
+            
+            badge.addEventListener('mouseleave', function() {
+                this.style.transform = 'scale(1)';
+            });
+        });
+
+        // Progress bar animation on scroll
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver(function(entries) {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    const progressBars = entry.target.querySelectorAll('.progress-fill');
+                    progressBars.forEach(bar => {
+                        bar.style.transition = 'width 1s ease-out';
+                        const width = bar.style.width;
+                        bar.style.width = '0%';
+                        setTimeout(() => {
+                            bar.style.width = width;
+                        }, 100);
+                    });
+                }
+            });
+        }, observerOptions);
+
+        // Observe progress sections
+        document.querySelectorAll('.card').forEach(card => {
+            observer.observe(card);
+        });
+
+        // Export functionality simulation
+        document.querySelector('button[class*="btn-outline"]').addEventListener('click', function() {
+            alert('Progress report exported successfully! (This is a demo)');
+        });
+    </script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
+</body>
+</html>

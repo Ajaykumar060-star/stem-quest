@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Dashboard - STEM Quest</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <script
+      type="module"
+      src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fstemquest2030back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"
+    ></script>
+    <script src="../public/auth.js"></script>
+  </head>
+  <body
+    class="min-h-screen bg-gradient-to-br from-primary-50 via-background to-secondary-50"
+  >
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+      <svg
+        class="w-full h-full"
+        viewBox="0 0 100 100"
+        xmlns="http://www.w3.org/2000/svg"
+      >
+        <defs>
+          <pattern
+            id="grid"
+            width="10"
+            height="10"
+            patternUnits="userSpaceOnUse"
+          >
+            <path
+              d="M 10 0 L 0 0 0 10"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="0.5"
+            />
+          </pattern>
+        </defs>
+        <rect width="100" height="100" fill="url(#grid)" />
+      </svg>
+    </div>
+
+    <!-- Header -->
+    <header
+      class="relative z-10 bg-white/80 backdrop-blur-sm border-b border-border sticky top-0"
+    >
+      <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div class="flex justify-between items-center h-16">
+          <!-- Logo and Welcome -->
+          <div class="flex items-center space-x-4">
+            <div
+              class="w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center"
+            >
+              <svg
+                class="w-6 h-6 text-white"
+                fill="none"
+                stroke="currentColor"
+                viewBox="0 0 24 24"
+              >
+                <path
+                  stroke-linecap="round"
+                  stroke-linejoin="round"
+                  stroke-width="2"
+                  d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"
+                />
+              </svg>
+            </div>
+            <div>
+              <h1 class="text-lg font-bold text-text-primary">STEM Quest</h1>
+              <p class="text-sm text-text-secondary hidden sm:block">
+                Welcome back, Arjun!
+              </p>
+            </div>
+          </div>
+
+          <!-- Header Actions -->
+          <div class="flex items-center space-x-4">
+            <!-- Language Selector -->
+            <div class="relative hidden sm:block">
+              <select
+                class="appearance-none bg-white border border-border rounded-lg px-3 py-2 pr-8 text-sm font-medium text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200"
+              >
+                <option value="en">English</option>
+                <option value="hi">हिंदी</option>
+                <option value="bn">বাংলা</option>
+                <option value="te">తెలుగు</option>
+                <option value="ta">தமிழ்</option>
+              </select>
+              <div
+                class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+              >
+                <svg
+                  class="w-4 h-4 text-text-tertiary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </div>
+            </div>
+
+            <!-- Offline Status -->
+            <div
+              class="flex items-center space-x-2 px-3 py-1 bg-success-50 border border-success-100 rounded-full"
+            >
+              <div
+                class="w-2 h-2 bg-success-600 rounded-full animate-pulse"
+              ></div>
+              <span
+                class="text-sm font-medium text-success-600 hidden sm:inline"
+                >Offline Ready</span
+              >
+            </div>
+
+            <!-- Profile Menu -->
+            <div class="relative" id="profileMenuContainer">
+              <button
+                class="flex items-center space-x-2 p-2 rounded-lg hover:bg-surface transition-colors"
+                onclick="toggleProfileMenu()"
+              >
+                <div
+                  class="w-8 h-8 bg-gradient-to-br from-accent-400 to-accent-600 rounded-full flex items-center justify-center"
+                >
+                  <span class="text-sm font-bold text-white">A</span>
+                </div>
+                <svg
+                  class="w-4 h-4 text-text-tertiary"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  />
+                </svg>
+              </button>
+
+              <!-- Profile Dropdown -->
+              <div
+                id="profileMenu"
+                class="hidden absolute right-0 bottom-full mb-2 w-48 bg-white rounded-lg shadow-floating border border-border z-50"
+              >
+                <div class="py-1">
+                  <a
+                    href="javascript:void(0)"
+                    class="flex items-center px-4 py-2 text-sm text-text-primary hover:bg-surface transition-colors"
+                    onclick="openNotifications()"
+                  >
+                    <svg
+                      class="w-4 h-4 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
+                      />
+                    </svg>
+                    Notifications
+                  </a>
+                  <a
+                    href="student_profile.html"
+                    class="flex items-center px-4 py-2 text-sm text-text-primary hover:bg-surface transition-colors"
+                  >
+                    <svg
+                      class="w-4 h-4 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"
+                      />
+                    </svg>
+                    My Profile
+                  </a>
+                  <a
+                    href="student_profile.html#settings"
+                    class="flex items-center px-4 py-2 text-sm text-text-primary hover:bg-surface transition-colors"
+                  >
+                    <svg
+                      class="w-4 h-4 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l.867 2.668a2 2 0 001.265 1.265l2.668.867c.921.3.921 1.603 0 1.902l-2.668.867a2 2 0 00-1.265 1.265l-.867 2.668c-.3.921-1.603.921-1.902 0l-.867-2.668a2 2 0 00-1.265-1.265l-2.668-.867c-.921-.3-.921-1.603 0-1.902l2.668-.867a2 2 0 001.265-1.265l.867-2.668z"
+                      />
+                    </svg>
+                    Settings
+                  </a>
+                  <a
+                    href="progress_tracking.html"
+                    class="flex items-center px-4 py-2 text-sm text-text-primary hover:bg-surface transition-colors"
+                  >
+                    <svg
+                      class="w-4 h-4 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+                      />
+                    </svg>
+                    Progress Tracking
+                  </a>
+                  <div class="border-t border-border my-1"></div>
+                  <a
+                    href="javascript:void(0)"
+                    onclick="window.STEMQUEST_AUTH && STEMQUEST_AUTH.signOut()"
+                    class="flex items-center px-4 py-2 text-sm text-error-600 hover:bg-error-50 transition-colors"
+                  >
+                    <svg
+                      class="w-4 h-4 mr-3"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"
+                      />
+                    </svg>
+                    Sign Out
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+      <div class="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        <!-- Main Dashboard Content -->
+        <div class="lg:col-span-3 space-y-6">
+          <!-- Welcome Section -->
+          <div
+            class="card p-6 bg-gradient-to-r from-primary-500 to-secondary-500 text-white"
+          >
+            <div class="flex items-center justify-between">
+              <div>
+                <h2 class="text-2xl font-bold mb-2">Welcome back, Arjun! 🚀</h2>
+                <p class="text-primary-100 mb-4">
+                  Ready to continue your STEM adventure? You're doing amazing!
+                </p>
+                <div class="flex items-center space-x-6">
+                  <div class="flex items-center space-x-2">
+                    <svg
+                      class="w-5 h-5 text-accent-300"
+                      fill="currentColor"
+                      viewBox="0 0 20 20"
+                    >
+                      <path
+                        d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                      />
+                    </svg>
+                    <span class="font-semibold">Level 7</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <svg
+                      class="w-5 h-5 text-accent-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M13 10V3L4 14h7v7l9-11h-7z"
+                      />
+                    </svg>
+                    <span class="font-semibold">2,450 Points</span>
+                  </div>
+                  <div class="flex items-center space-x-2">
+                    <svg
+                      class="w-5 h-5 text-accent-300"
+                      fill="none"
+                      stroke="currentColor"
+                      viewBox="0 0 24 24"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        stroke-width="2"
+                        d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                      />
+                    </svg>
+                    <span class="font-semibold">12 Day Streak</span>
+                  </div>
+                </div>
+              </div>
+              <div class="hidden sm:block">
+                <img
+                  src="https://images.pexels.com/photos/8471916/pexels-photo-8471916.jpeg?auto=compress&cs=tinysrgb&w=200"
+                  alt="STEM Learning"
+                  class="w-24 h-24 rounded-full object-cover border-4 border-white/20"
+                  loading="lazy"
+                  onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Progress Summary -->
+          <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div class="card p-4">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold text-text-primary">
+                  Overall Progress
+                </h3>
+                <div
+                  class="w-8 h-8 bg-primary-100 rounded-lg flex items-center justify-center"
+                >
+                  <svg
+                    class="w-4 h-4 text-primary-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <div class="progress-bar mb-2">
+                <div class="progress-fill" style="width: 68%"></div>
+              </div>
+              <p class="text-sm text-text-secondary">68% Complete • Grade 8</p>
+            </div>
+
+            <div class="card p-4">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold text-text-primary">This Week</h3>
+                <div
+                  class="w-8 h-8 bg-secondary-100 rounded-lg flex items-center justify-center"
+                >
+                  <svg
+                    class="w-4 h-4 text-secondary-600"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <p class="text-2xl font-bold text-text-primary mb-1">4.5 hrs</p>
+              <p class="text-sm text-text-secondary">Learning Time</p>
+            </div>
+
+            <div class="card p-4">
+              <div class="flex items-center justify-between mb-3">
+                <h3 class="font-semibold text-text-primary">Achievements</h3>
+                <div
+                  class="w-8 h-8 bg-accent-100 rounded-lg flex items-center justify-center"
+                >
+                  <svg
+                    class="w-4 h-4 text-accent-600"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                    />
+                  </svg>
+                </div>
+              </div>
+              <p class="text-2xl font-bold text-text-primary mb-1">15</p>
+              <p class="text-sm text-text-secondary">Badges Earned</p>
+            </div>
+          </div>
+
+          <!-- Subject Modules -->
+          <div class="space-y-4">
+            <div class="flex items-center justify-between">
+              <h2 class="text-xl font-bold text-text-primary">
+                Your STEM Subjects
+              </h2>
+              <a
+                href="game_selection.html"
+                class="text-sm font-medium text-primary-600 hover:text-primary-700 transition-colors"
+              >
+                View All Games →
+              </a>
+            </div>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <!-- Mathematics -->
+              <div
+                class="card p-6 hover:shadow-elevated transition-all duration-200 hover-lift"
+              >
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div
+                      class="w-12 h-12 bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 class="font-bold text-text-primary">Mathematics</h3>
+                      <p class="text-sm text-text-secondary">
+                        Algebra & Geometry
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="px-2 py-1 bg-success-100 text-success-600 text-xs font-medium rounded-full"
+                    >75% Complete</span
+                  >
+                </div>
+
+                <div class="progress-bar mb-4">
+                  <div
+                    class="progress-fill bg-blue-500"
+                    style="width: 75%"
+                  ></div>
+                </div>
+
+                <div class="flex items-center justify-between mb-4">
+                  <div
+                    class="flex items-center space-x-4 text-sm text-text-secondary"
+                  >
+                    <span>8 Games Available</span>
+                    <span>•</span>
+                    <span>Level: Intermediate</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center space-x-2 mb-4">
+                  <div class="flex -space-x-1">
+                    <div
+                      class="w-6 h-6 bg-accent-400 rounded-full border-2 border-white flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-3 h-3 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="w-6 h-6 bg-primary-400 rounded-full border-2 border-white flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-3 h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="w-6 h-6 bg-secondary-400 rounded-full border-2 border-white flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-3 h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="text-sm text-text-secondary"
+                    >3 recent badges</span
+                  >
+                </div>
+
+                <button
+                  class="btn-primary w-full active-press"
+                  onclick="window.location.href='game_selection.html'"
+                >
+                  Continue Learning
+                </button>
+              </div>
+
+              <!-- Science -->
+              <div
+                class="card p-6 hover:shadow-elevated transition-all duration-200 hover-lift"
+              >
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div
+                      class="w-12 h-12 bg-gradient-to-br from-secondary-500 to-secondary-600 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 class="font-bold text-text-primary">Science</h3>
+                      <p class="text-sm text-text-secondary">
+                        Physics & Chemistry
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="px-2 py-1 bg-warning-100 text-warning-600 text-xs font-medium rounded-full"
+                    >62% Complete</span
+                  >
+                </div>
+
+                <div class="progress-bar mb-4">
+                  <div
+                    class="progress-fill bg-secondary-500"
+                    style="width: 62%"
+                  ></div>
+                </div>
+
+                <div class="flex items-center justify-between mb-4">
+                  <div
+                    class="flex items-center space-x-4 text-sm text-text-secondary"
+                  >
+                    <span>6 Games Available</span>
+                    <span>•</span>
+                    <span>Level: Beginner</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center space-x-2 mb-4">
+                  <div class="flex -space-x-1">
+                    <div
+                      class="w-6 h-6 bg-secondary-400 rounded-full border-2 border-white flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-3 h-3 text-white"
+                        fill="currentColor"
+                        viewBox="0 0 20 20"
+                      >
+                        <path
+                          d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                        />
+                      </svg>
+                    </div>
+                    <div
+                      class="w-6 h-6 bg-primary-400 rounded-full border-2 border-white flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-3 h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M13 10V3L4 14h7v7l9-11h-7z"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="text-sm text-text-secondary"
+                    >2 recent badges</span
+                  >
+                </div>
+
+                <button
+                  class="btn-secondary w-full active-press"
+                  onclick="window.location.href='game_selection.html'"
+                >
+                  Continue Learning
+                </button>
+              </div>
+
+              <!-- Technology -->
+              <div
+                class="card p-6 hover:shadow-elevated transition-all duration-200 hover-lift"
+              >
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div
+                      class="w-12 h-12 bg-gradient-to-br from-accent-500 to-accent-600 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 class="font-bold text-text-primary">Technology</h3>
+                      <p class="text-sm text-text-secondary">
+                        Coding & Digital Skills
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="px-2 py-1 bg-primary-100 text-primary-600 text-xs font-medium rounded-full"
+                    >45% Complete</span
+                  >
+                </div>
+
+                <div class="progress-bar mb-4">
+                  <div
+                    class="progress-fill bg-accent-500"
+                    style="width: 45%"
+                  ></div>
+                </div>
+
+                <div class="flex items-center justify-between mb-4">
+                  <div
+                    class="flex items-center space-x-4 text-sm text-text-secondary"
+                  >
+                    <span>5 Games Available</span>
+                    <span>•</span>
+                    <span>Level: Beginner</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center space-x-2 mb-4">
+                  <div class="flex -space-x-1">
+                    <div
+                      class="w-6 h-6 bg-accent-400 rounded-full border-2 border-white flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-3 h-3 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M5 13l4 4L19 7"
+                        />
+                      </svg>
+                    </div>
+                  </div>
+                  <span class="text-sm text-text-secondary"
+                    >1 recent badge</span
+                  >
+                </div>
+
+                <button
+                  class="btn-outline w-full active-press"
+                  onclick="window.location.href='game_selection.html'"
+                >
+                  Start Learning
+                </button>
+              </div>
+
+              <!-- Engineering -->
+              <div
+                class="card p-6 hover:shadow-elevated transition-all duration-200 hover-lift"
+              >
+                <div class="flex items-start justify-between mb-4">
+                  <div class="flex items-center space-x-3">
+                    <div
+                      class="w-12 h-12 bg-gradient-to-br from-purple-500 to-purple-600 rounded-xl flex items-center justify-center"
+                    >
+                      <svg
+                        class="w-6 h-6 text-white"
+                        fill="none"
+                        stroke="currentColor"
+                        viewBox="0 0 24 24"
+                      >
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                        />
+                        <path
+                          stroke-linecap="round"
+                          stroke-linejoin="round"
+                          stroke-width="2"
+                          d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                        />
+                      </svg>
+                    </div>
+                    <div>
+                      <h3 class="font-bold text-text-primary">Engineering</h3>
+                      <p class="text-sm text-text-secondary">
+                        Design & Problem Solving
+                      </p>
+                    </div>
+                  </div>
+                  <span
+                    class="px-2 py-1 bg-surface-200 text-text-secondary text-xs font-medium rounded-full"
+                    >New!</span
+                  >
+                </div>
+
+                <div class="progress-bar mb-4">
+                  <div
+                    class="progress-fill bg-purple-500"
+                    style="width: 15%"
+                  ></div>
+                </div>
+
+                <div class="flex items-center justify-between mb-4">
+                  <div
+                    class="flex items-center space-x-4 text-sm text-text-secondary"
+                  >
+                    <span>4 Games Available</span>
+                    <span>•</span>
+                    <span>Level: Beginner</span>
+                  </div>
+                </div>
+
+                <div class="flex items-center space-x-2 mb-4">
+                  <span class="text-sm text-text-secondary"
+                    >No badges yet - Start learning!</span
+                  >
+                </div>
+
+                <button
+                  class="btn-outline w-full active-press"
+                  onclick="window.location.href='game_selection.html'"
+                >
+                  Explore Now
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Sidebar -->
+        <div class="lg:col-span-1 space-y-6">
+          <!-- Recent Achievements -->
+          <div class="card p-4">
+            <h3 class="font-bold text-text-primary mb-4">
+              Recent Achievements
+            </h3>
+            <div class="space-y-3">
+              <div class="flex items-center space-x-3">
+                <div
+                  class="w-10 h-10 bg-gradient-to-br from-accent-400 to-accent-600 rounded-full flex items-center justify-center"
+                >
+                  <svg
+                    class="w-5 h-5 text-white"
+                    fill="currentColor"
+                    viewBox="0 0 20 20"
+                  >
+                    <path
+                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-text-primary text-sm">
+                    Math Master
+                  </p>
+                  <p class="text-xs text-text-secondary">
+                    Completed 10 algebra problems
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-3">
+                <div
+                  class="w-10 h-10 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-full flex items-center justify-center"
+                >
+                  <svg
+                    class="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M13 10V3L4 14h7v7l9-11h-7z"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-text-primary text-sm">
+                    Speed Learner
+                  </p>
+                  <p class="text-xs text-text-secondary">
+                    Finished game in record time
+                  </p>
+                </div>
+              </div>
+
+              <div class="flex items-center space-x-3">
+                <div
+                  class="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center"
+                >
+                  <svg
+                    class="w-5 h-5 text-white"
+                    fill="none"
+                    stroke="currentColor"
+                    viewBox="0 0 24 24"
+                  >
+                    <path
+                      stroke-linecap="round"
+                      stroke-linejoin="round"
+                      stroke-width="2"
+                      d="M5 13l4 4L19 7"
+                    />
+                  </svg>
+                </div>
+                <div>
+                  <p class="font-medium text-text-primary text-sm">
+                    Perfect Score
+                  </p>
+                  <p class="text-xs text-text-secondary">
+                    100% on chemistry quiz
+                  </p>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Learning Streak -->
+          <div class="card p-4">
+            <h3 class="font-bold text-text-primary mb-4">Learning Streak</h3>
+            <div class="text-center">
+              <div
+                class="w-16 h-16 bg-gradient-to-br from-accent-400 to-accent-600 rounded-full flex items-center justify-center mx-auto mb-3"
+              >
+                <svg
+                  class="w-8 h-8 text-white"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M17.657 18.657A8 8 0 016.343 7.343S7 9 9 10c0-2 .5-5 2.986-7C14 5 16.09 5.777 17.656 7.343A7.975 7.975 0 0120 13a7.975 7.975 0 01-2.343 5.657z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M9.879 16.121A3 3 0 1012.015 11L11 14H9c0 .768.293 1.536.879 2.121z"
+                  />
+                </svg>
+              </div>
+              <p class="text-2xl font-bold text-text-primary">12 Days</p>
+              <p class="text-sm text-text-secondary mb-4">
+                Keep it up! You're on fire! 🔥
+              </p>
+              <div class="flex justify-center space-x-1">
+                <div class="w-6 h-6 bg-accent-400 rounded-full"></div>
+                <div class="w-6 h-6 bg-accent-400 rounded-full"></div>
+                <div class="w-6 h-6 bg-accent-400 rounded-full"></div>
+                <div class="w-6 h-6 bg-accent-400 rounded-full"></div>
+                <div class="w-6 h-6 bg-accent-400 rounded-full"></div>
+                <div class="w-6 h-6 bg-surface-200 rounded-full"></div>
+                <div class="w-6 h-6 bg-surface-200 rounded-full"></div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Quick Actions -->
+          <div class="card p-4">
+            <h3 class="font-bold text-text-primary mb-4">Quick Actions</h3>
+            <div class="space-y-2">
+              <button
+                class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-surface transition-colors text-left"
+                onclick="downloadOfflineContent()"
+              >
+                <svg
+                  class="w-5 h-5 text-primary-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M12 10v6m0 0l-3-3m3 3l3-3m2 8H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"
+                  />
+                </svg>
+                <span class="text-sm font-medium">Download Content</span>
+              </button>
+
+              <button
+                class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-surface transition-colors text-left"
+                onclick="syncProgress()"
+              >
+                <svg
+                  class="w-5 h-5 text-secondary-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"
+                  />
+                </svg>
+                <span class="text-sm font-medium">Sync Progress</span>
+              </button>
+
+              <a
+                href="student_profile.html"
+                class="w-full flex items-center space-x-3 p-3 rounded-lg hover:bg-surface transition-colors"
+              >
+                <svg
+                  class="w-5 h-5 text-accent-600"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"
+                  />
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"
+                  />
+                </svg>
+                <span class="text-sm font-medium">Settings</span>
+              </a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </main>
+
+    <!-- Achievement Notification (Hidden by default) -->
+    <div
+      id="achievementNotification"
+      class="hidden fixed top-4 right-4 z-50 max-w-sm"
+    >
+      <div
+        class="bg-white rounded-lg shadow-floating border border-border p-4 animate-slide-up"
+      >
+        <div class="flex items-start space-x-3">
+          <div
+            class="w-10 h-10 bg-gradient-to-br from-accent-400 to-accent-600 rounded-full flex items-center justify-center flex-shrink-0"
+          >
+            <svg
+              class="w-5 h-5 text-white"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
+              />
+            </svg>
+          </div>
+          <div class="flex-1">
+            <h4 class="font-bold text-text-primary">New Achievement! 🎉</h4>
+            <p class="text-sm text-text-secondary" id="achievementText">
+              You've earned a new badge!
+            </p>
+          </div>
+          <button
+            onclick="hideAchievementNotification()"
+            class="text-text-tertiary hover:text-text-secondary"
+          >
+            <svg
+              class="w-5 h-5"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <script>
+      // Auth guard
+      if (window.STEMQUEST_AUTH && !STEMQUEST_AUTH.requireAuth()) {
+        // requireAuth will redirect; stop further execution
+      }
+      // Profile menu toggle
+      function toggleProfileMenu() {
+        const menu = document.getElementById("profileMenu");
+        menu.classList.toggle("hidden");
+      }
+
+      // Close profile menu when clicking outside the container
+      document.addEventListener("click", function (event) {
+        const container = document.getElementById("profileMenuContainer");
+        const menu = document.getElementById("profileMenu");
+        if (!container.contains(event.target)) {
+          menu.classList.add("hidden");
+        }
+      });
+
+      // Achievement notification functions
+      function showAchievementNotification(text) {
+        const notification = document.getElementById("achievementNotification");
+        const textElement = document.getElementById("achievementText");
+        textElement.textContent = text;
+        notification.classList.remove("hidden");
+
+        // Auto hide after 5 seconds
+        setTimeout(() => {
+          hideAchievementNotification();
+        }, 5000);
+      }
+
+      function hideAchievementNotification() {
+        const notification = document.getElementById("achievementNotification");
+        notification.classList.add("hidden");
+      }
+
+      // Quick action functions
+      function downloadOfflineContent() {
+        // Mock download functionality
+        showAchievementNotification("Content downloaded for offline use!");
+        console.log("Downloading offline content...");
+      }
+
+      function syncProgress() {
+        // Mock sync functionality
+        showAchievementNotification("Progress synced successfully!");
+        console.log("Syncing progress...");
+      }
+
+      function openNotifications() {
+        showAchievementNotification("No new notifications");
+        const menu = document.getElementById("profileMenu");
+        menu.classList.add("hidden");
+      }
+
+      // Language selector functionality
+      document.querySelector("select").addEventListener("change", function (e) {
+        const selectedLang = e.target.value;
+        localStorage.setItem("stemquest_language", selectedLang);
+        console.log("Language changed to:", selectedLang);
+      });
+
+      // Load saved language preference
+      window.addEventListener("load", function () {
+        const savedLang = localStorage.getItem("stemquest_language");
+        if (savedLang) {
+          document.querySelector("select").value = savedLang;
+        }
+      });
+
+      // Mock data loading and progress updates
+      window.addEventListener("load", function () {
+        // Load user data from session storage
+        const userData = JSON.parse(
+          sessionStorage.getItem("stemquest_user") || "{}"
+        );
+        console.log("User data loaded:", userData);
+
+        // Simulate random achievement notification
+        setTimeout(() => {
+          const achievements = [
+            "Daily Login Streak: 12 days!",
+            "Math Wizard: Solved 50 problems!",
+            "Science Explorer: Completed chemistry module!",
+            "Quick Learner: Finished game in record time!",
+          ];
+          const randomAchievement =
+            achievements[Math.floor(Math.random() * achievements.length)];
+          showAchievementNotification(randomAchievement);
+        }, 2000);
+      });
+
+      // Service Worker registration for offline functionality
+      if ("serviceWorker" in navigator) {
+        window.addEventListener("load", function () {
+          navigator.serviceWorker
+            .register("/sw.js")
+            .then(function (registration) {
+              console.log("ServiceWorker registration successful");
+            })
+            .catch(function (err) {
+              console.log("ServiceWorker registration failed");
+            });
+        });
+      }
+
+      // IndexedDB setup for local data storage
+      let db;
+      const request = indexedDB.open("STEMQuestDB", 1);
+
+      request.onerror = function (event) {
+        console.log("Database error: " + event.target.errorCode);
+      };
+
+      request.onsuccess = function (event) {
+        db = event.target.result;
+        console.log("Database opened successfully");
+      };
+
+      request.onupgradeneeded = function (event) {
+        db = event.target.result;
+
+        // Create object stores for different data types
+        if (!db.objectStoreNames.contains("progress")) {
+          const progressStore = db.createObjectStore("progress", {
+            keyPath: "subject",
+          });
+        }
+
+        if (!db.objectStoreNames.contains("achievements")) {
+          const achievementStore = db.createObjectStore("achievements", {
+            keyPath: "id",
+            autoIncrement: true,
+          });
+        }
+
+        if (!db.objectStoreNames.contains("gameStates")) {
+          const gameStateStore = db.createObjectStore("gameStates", {
+            keyPath: "gameId",
+          });
+        }
+      };
+
+      // Function to save progress to IndexedDB
+      function saveProgress(subject, progress) {
+        if (!db) return;
+
+        const transaction = db.transaction(["progress"], "readwrite");
+        const store = transaction.objectStore("progress");
+
+        store.put({
+          subject: subject,
+          progress: progress,
+          lastUpdated: new Date().toISOString(),
+        });
+      }
+
+      // Function to load progress from IndexedDB
+      function loadProgress(subject) {
+        if (!db) return Promise.resolve(null);
+
+        return new Promise((resolve, reject) => {
+          const transaction = db.transaction(["progress"], "readonly");
+          const store = transaction.objectStore("progress");
+          const request = store.get(subject);
+
+          request.onsuccess = function () {
+            resolve(request.result);
+          };
+
+          request.onerror = function () {
+            reject(request.error);
+          };
+        });
+      }
+    </script>
+    <script
+      id="dhws-dataInjector"
+      src="../public/dhws-data-injector.js"
+    ></script>
+  </body>
+</html>
