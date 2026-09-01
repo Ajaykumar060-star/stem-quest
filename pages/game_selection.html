@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<script src="../public/data-store.js"></script>
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fstemquest2030back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
 <script src="../public/auth.js"></script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-primary-50 via-background to-secondary-50">
@@ -132,19 +132,19 @@
             <!-- Stats Overview -->
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
                 <div class="card p-4 text-center">
-                    <div class="text-2xl font-bold text-primary-600" id="statAvailableGames">12</div>
+                    <div class="text-2xl font-bold text-primary-600">12</div>
                     <div class="text-sm text-text-secondary">Available Games</div>
                 </div>
                 <div class="card p-4 text-center">
-                    <div class="text-2xl font-bold text-secondary-600" id="statCompletedGames">0</div>
+                    <div class="text-2xl font-bold text-secondary-600">8</div>
                     <div class="text-sm text-text-secondary">Completed</div>
                 </div>
                 <div class="card p-4 text-center">
-                    <div class="text-2xl font-bold text-accent-600" id="statGamePoints">0</div>
+                    <div class="text-2xl font-bold text-accent-600">1,250</div>
                     <div class="text-sm text-text-secondary">Points Earned</div>
                 </div>
                 <div class="card p-4 text-center">
-                    <div class="text-2xl font-bold text-text-primary" id="statGameBadges">0</div>
+                    <div class="text-2xl font-bold text-text-primary">4</div>
                     <div class="text-sm text-text-secondary">Badges Won</div>
                 </div>
             </div>
@@ -271,7 +271,7 @@
                         </div>
 
                         <div class="flex space-x-2">
-                            <a href="game_interface.html?game=fraction" class="btn-primary flex-1 text-center py-2">
+                            <a href="game_interface.html" class="btn-primary flex-1 text-center py-2">
                                 Play Again
                             </a>
                             <button class="btn-outline px-3 py-2">
@@ -344,7 +344,7 @@
                         </div>
 
                         <div class="flex space-x-2">
-                            <a href="game_interface.html?game=algebra" class="btn-primary flex-1 text-center py-2">
+                            <a href="game_interface.html" class="btn-primary flex-1 text-center py-2">
                                 Continue
                             </a>
                             <button class="btn-outline px-3 py-2">
@@ -395,7 +395,7 @@
                             </div>
                         </div>
 
-                        <a href="game_interface.html?game=number" class="btn-primary w-full text-center py-2">
+                        <a href="game_interface.html" class="btn-primary w-full text-center py-2">
                             Start Game
                         </a>
                     </div>
@@ -446,7 +446,7 @@
                             </div>
                         </div>
 
-                        <a href="game_interface.html?game=geometry" class="btn-secondary w-full text-center py-2">
+                        <a href="game_interface.html" class="btn-secondary w-full text-center py-2">
                             Play Again
                         </a>
                     </div>
@@ -497,7 +497,7 @@
                             </div>
                         </div>
 
-                        <a href="game_interface.html?game=calculus" class="btn-primary w-full text-center py-2">
+                        <a href="game_interface.html" class="btn-primary w-full text-center py-2">
                             Continue
                         </a>
                     </div>
@@ -529,7 +529,7 @@
                             </div>
                         </div>
 
-                        <a href="game_interface.html?game=pattern" class="btn-primary w-full text-center py-2">
+                        <a href="game_interface.html" class="btn-primary w-full text-center py-2">
                             Start Game
                         </a>
                     </div>
@@ -560,7 +560,7 @@
                             </div>
                         </div>
 
-                        <a href="game_interface.html?game=statistics" class="btn-primary w-full text-center py-2">
+                        <a href="game_interface.html" class="btn-primary w-full text-center py-2">
                             Start Game
                         </a>
                     </div>
@@ -610,7 +610,7 @@
                             </div>
                         </div>
 
-                        <a href="game_interface.html?game=puzzle" class="btn-secondary w-full text-center py-2">
+                        <a href="game_interface.html" class="btn-secondary w-full text-center py-2">
                             Play Again
                         </a>
                     </div>
@@ -717,14 +717,10 @@
             }
         });
 
-        // Simulate offline functionality - replace with real data population
+        // Simulate offline functionality
         window.addEventListener('load', function() {
-            var user = STEMQUEST_STORE.currentUser();
-            if (user) {
-                document.getElementById('statCompletedGames').textContent = user.stats.gamesCompleted || 0;
-                document.getElementById('statGamePoints').textContent = (user.stats.points || 0).toLocaleString();
-                document.getElementById('statGameBadges').textContent = user.badges ? user.badges.length : 0;
-            }
+            // Simulate loading game data
+            console.log('Loading game data from local storage...');
             
             // Add loading states to cards initially
             const gameCards = document.querySelectorAll('.game-card');
@@ -746,6 +742,7 @@
         document.querySelectorAll('.game-card a').forEach(link => {
             link.addEventListener('click', function(e) {
                 const gameTitle = this.closest('.game-card').querySelector('h3').textContent;
+                console.log('Game selected:', gameTitle);
                 
                 // Store selected game info
                 sessionStorage.setItem('stemquest_current_game', JSON.stringify({
@@ -755,5 +752,6 @@
             });
         });
     </script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
 </html>

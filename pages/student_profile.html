@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<script src="../public/data-store.js"></script>
+<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fstemquest2030back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
 <script src="../public/auth.js"></script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-primary-50 via-background to-secondary-50">
@@ -120,7 +120,7 @@
                     <div class="relative inline-block mb-6">
                         <div class="w-32 h-32 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-elevated">
                             <img id="profileAvatar" src="https://images.pexels.com/photos/8471916/pexels-photo-8471916.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Student Avatar" class="w-full h-full object-cover rounded-full" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
-                            <div class="w-full h-full rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white text-4xl font-bold" style="display: none;" id="avatarInitials">
+                            <div class="w-full h-full rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white text-4xl font-bold" style="display: none;">
                                 AS
                             </div>
                         </div>
@@ -134,17 +134,17 @@
                     <!-- Student Info -->
                     <div class="space-y-4">
                         <div>
-                            <h2 id="studentName" class="text-2xl font-bold text-text-primary">Student</h2>
-                            <p class="text-text-secondary" id="studentIdText">Student ID: --</p>
+                            <h2 id="studentName" class="text-2xl font-bold text-text-primary">Alex Chen</h2>
+                            <p class="text-text-secondary">Student ID: STU2025001</p>
                         </div>
 
                         <div class="grid grid-cols-2 gap-4 text-center">
                             <div class="bg-primary-50 rounded-lg p-3">
-                                <div class="text-2xl font-bold text-primary-600" id="gradeLevelDisplay">-</div>
+                                <div class="text-2xl font-bold text-primary-600">8</div>
                                 <div class="text-sm text-text-secondary">Grade Level</div>
                             </div>
                             <div class="bg-secondary-50 rounded-lg p-3">
-                                <div class="text-2xl font-bold text-secondary-600" id="learningLevelDisplay">1</div>
+                                <div class="text-2xl font-bold text-secondary-600">15</div>
                                 <div class="text-sm text-text-secondary">Learning Level</div>
                             </div>
                         </div>
@@ -153,19 +153,19 @@
                         <div class="space-y-3 pt-4 border-t border-border">
                             <div class="flex justify-between items-center">
                                 <span class="text-text-secondary">Total Points</span>
-                                <span class="font-semibold text-accent-600" id="statPoints">0</span>
+                                <span class="font-semibold text-accent-600">2,450</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-text-secondary">Games Completed</span>
-                                <span class="font-semibold text-text-primary" id="statGames">0</span>
+                                <span class="font-semibold text-text-primary">23</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-text-secondary">Badges Earned</span>
-                                <span class="font-semibold text-text-primary" id="statBadges">0</span>
+                                <span class="font-semibold text-text-primary">8</span>
                             </div>
                             <div class="flex justify-between items-center">
                                 <span class="text-text-secondary">Days Active</span>
-                                <span class="font-semibold text-text-primary" id="statDays">0</span>
+                                <span class="font-semibold text-text-primary">45</span>
                             </div>
                         </div>
                     </div>
@@ -218,7 +218,7 @@
                             <label for="displayName" class="block text-sm font-medium text-text-primary mb-2">
                                 Display Name
                             </label>
-                            <input type="text" id="displayName" name="displayName" value="" class="input" placeholder="Enter your display name" />
+                            <input type="text" id="displayName" name="displayName" value="Alex Chen" class="input" placeholder="Enter your display name" />
                         </div>
 
                         <div>
@@ -228,7 +228,7 @@
                             <select id="gradeLevel" name="gradeLevel" class="input">
                                 <option value="6">Grade 6</option>
                                 <option value="7">Grade 7</option>
-                                <option value="8">Grade 8</option>
+                                <option value="8" selected>Grade 8</option>
                                 <option value="9">Grade 9</option>
                                 <option value="10">Grade 10</option>
                                 <option value="11">Grade 11</option>
@@ -253,7 +253,7 @@
                             <label for="schoolName" class="block text-sm font-medium text-text-primary mb-2">
                                 School Name
                             </label>
-                            <input type="text" id="schoolName" name="schoolName" value="" class="input" placeholder="Enter your school name" />
+                            <input type="text" id="schoolName" name="schoolName" value="Rural High School" class="input" placeholder="Enter your school name" />
                         </div>
 
                         <div class="md:col-span-2">
@@ -603,8 +603,8 @@
                     profileAvatar.nextElementSibling.textContent = selectedAvatar;
                 }
                 
-                // Save to data store
-                STEMQUEST_STORE.setAvatar(selectedAvatar);
+                // Save to localStorage
+                localStorage.setItem('stemquest_avatar', selectedAvatar);
                 closeAvatarSelector();
             }
         }
@@ -642,17 +642,11 @@
                 const formData = new FormData(this);
                 const data = Object.fromEntries(formData);
                 
-                // Save to data store
-                STEMQUEST_STORE.updateProfile({
-                    displayName: data.displayName,
-                    grade: data.gradeLevel,
-                    school: data.schoolName,
-                    language: data.preferredLanguage
-                });
-                
                 // Update display name
                 document.getElementById('studentName').textContent = data.displayName;
-                updateAvatarInitials(data.displayName);
+                
+                // Save to localStorage
+                localStorage.setItem('stemquest_profile', JSON.stringify(data));
                 
                 // Show success message
                 showNotification('Profile updated successfully!', 'success');
@@ -677,19 +671,19 @@
                     return;
                 }
                 
-                const result = STEMQUEST_STORE.changePassword(currentPassword, newPassword);
-                if (result.ok) {
+                // Mock password change (in real app, this would be an API call)
+                if (currentPassword === 'password123') {
                     showNotification('Password updated successfully!', 'success');
                     closePasswordModal();
                 } else {
-                    showNotification(result.error, 'error');
+                    showNotification('Current password is incorrect!', 'error');
                 }
             });
 
             // Language selector
             document.getElementById('languageSelector').addEventListener('change', function(e) {
                 const selectedLang = e.target.value;
-                STEMQUEST_STORE.updateProfile({ language: selectedLang });
+                localStorage.setItem('stemquest_language', selectedLang);
                 
                 // Update preferred language in form
                 document.getElementById('preferredLanguage').value = selectedLang;
@@ -702,46 +696,31 @@
         });
 
         function loadSavedData() {
-            const user = STEMQUEST_STORE.currentUser();
-            if (!user) return;
-
-            const displayName = user.displayName || user.username;
-
-            // Update header name, ID, grade, stats
-            document.getElementById('studentName').textContent = displayName;
-            document.getElementById('studentIdText').textContent = 'Student ID: ' + user.studentId;
-            document.getElementById('gradeLevelDisplay').textContent = user.grade;
-            document.getElementById('learningLevelDisplay').textContent = '1';
-            document.getElementById('statPoints').textContent = (user.stats.points || 0).toLocaleString();
-            document.getElementById('statGames').textContent = user.stats.gamesCompleted || 0;
-            document.getElementById('statBadges').textContent = user.badges ? user.badges.length : 0;
-            document.getElementById('statDays').textContent = user.stats.daysActive || 1;
-
-            // Update form fields
-            document.getElementById('displayName').value = displayName;
-            document.getElementById('gradeLevel').value = String(user.grade || 8);
-            document.getElementById('schoolName').value = user.school || '';
-            document.getElementById('preferredLanguage').value = user.language || 'en';
-
-            // Update avatar initials
-            updateAvatarInitials(displayName);
-
-            // Set difficulty preference radio
-            if (user.preferences) {
-                const diff = user.preferences.difficulty;
-                document.querySelectorAll('input[name="difficulty"]').forEach(function (r) {
-                    r.checked = (r.value === diff);
+            // Load saved profile data
+            const savedProfile = localStorage.getItem('stemquest_profile');
+            if (savedProfile) {
+                const profileData = JSON.parse(savedProfile);
+                
+                // Update form fields
+                Object.keys(profileData).forEach(key => {
+                    const element = document.getElementById(key);
+                    if (element) {
+                        element.value = profileData[key];
+                    }
                 });
+                
+                // Update display name
+                if (profileData.displayName) {
+                    document.getElementById('studentName').textContent = profileData.displayName;
+                }
             }
 
             // Load saved avatar
-            const savedAvatar = user.avatar;
+            const savedAvatar = localStorage.getItem('stemquest_avatar');
             if (savedAvatar) {
                 const profileAvatar = document.getElementById('profileAvatar');
                 if (savedAvatar.startsWith('http')) {
                     profileAvatar.src = savedAvatar;
-                    profileAvatar.style.display = 'block';
-                    profileAvatar.nextElementSibling.style.display = 'none';
                 } else {
                     profileAvatar.style.display = 'none';
                     profileAvatar.nextElementSibling.style.display = 'flex';
@@ -750,16 +729,11 @@
             }
 
             // Load saved language
-            const savedLang = user.language || localStorage.getItem('stemquest_language');
+            const savedLang = localStorage.getItem('stemquest_language');
             if (savedLang) {
                 document.getElementById('languageSelector').value = savedLang;
                 document.getElementById('preferredLanguage').value = savedLang;
             }
-        }
-
-        function updateAvatarInitials(name) {
-            const initials = name.trim().split(/\s+/).map(function (w) { return w[0]; }).slice(0, 2).join('').toUpperCase() || 'S';
-            document.getElementById('avatarInitials').textContent = initials;
         }
 
         function showNotification(message, type = 'success') {
@@ -809,5 +783,6 @@
             }
         });
     </script>
+<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
 </html>

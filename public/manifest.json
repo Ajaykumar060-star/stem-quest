@@ -1,7 +1,6 @@
 {
-  "short_name": "STEM Quest",
-  "name": "STEM Quest - Interactive Learning Platform",
-  "description": "Interactive, gamified STEM learning for students with offline support.",
+  "short_name": "stem-quest",
+  "name": "stem-quest",
   "icons": [
     {
       "src": "favicon.ico",
@@ -9,8 +8,8 @@
       "type": "image/x-icon"
     }
   ],
-  "start_url": "./index.html",
+  "start_url": ".",
   "display": "standalone",
-  "theme_color": "#2563EB",
-  "background_color": "#FEFEFE"
+  "theme_color": "#000000",
+  "background_color": "#ffffff"
 }

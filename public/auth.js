@@ -1,43 +1,46 @@
-/*
- * STEM Quest - Front-end auth & utility helpers
- *
- * These helpers are thin wrappers around the central data store and provide
- * the small, page-level conveniences (login state checks, redirects, formatters)
- * used by every page. The real logic lives in public/data-store.js.
- */
-(function (global) {
-  'use strict';
+// Simple front-end auth utilities for STEM Quest
+// Uses sessionStorage/localStorage to track login state
 
-  function getLoggedInUser() {
-    return global.STEMQUEST_STORE ? global.STEMQUEST_STORE.currentUser() : null;
-  }
+function getLoggedInUser() {
+    try {
+        const raw = sessionStorage.getItem('stemquest_user');
+        return raw ? JSON.parse(raw) : null;
+    } catch (e) {
+        return null;
+    }
+}
 
-  function isLoggedIn() {
-    return global.STEMQUEST_STORE ? global.STEMQUEST_STORE.isLoggedIn() : false;
-  }
+function isLoggedIn() {
+    return sessionStorage.getItem('stemquest_logged_in') === 'true';
+}
 
-  function requireAuth(redirectTarget) {
+function requireAuth() {
     if (!isLoggedIn()) {
-      var current = (window.location.pathname.split('/').pop() || '');
-      if (current !== 'student_login.html') {
-        window.location.href = redirectTarget || 'student_login.html';
-      }
-      return false;
+        // Redirect to login if not authenticated
+        const current = window.location.pathname.split('/').pop() || '';
+        if (current !== 'student_login.html') {
+            window.location.href = 'student_login.html';
+        }
+        return false;
     }
     return true;
-  }
+}
 
-  // Sign the current user out and return to the login page.
-  function signOut() {
-    if (global.STEMQUEST_STORE) global.STEMQUEST_STORE.signOut();
-    window.location.href = 'student_login.html';
-  }
+function signOut() {
+    try {
+        sessionStorage.removeItem('stemquest_logged_in');
+        sessionStorage.removeItem('stemquest_user');
+    } finally {
+        window.location.href = 'student_login.html';
+    }
+}
 
-  global.STEMQUEST_AUTH = {
+window.STEMQUEST_AUTH = {
     requireAuth: requireAuth,
     signOut: signOut,
     isLoggedIn: isLoggedIn,
-    getLoggedInUser: getLoggedInUser
-  };
+    getLoggedInUser: getLoggedInUser,
+    PASSWORD: 'password123'
+};
 
-})(window);
+
