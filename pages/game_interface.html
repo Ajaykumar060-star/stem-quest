@@ -108,7 +108,7 @@
                     </button>
 
                     <!-- Settings -->
-                    <button onclick="toggleSettings()" class="p-2 text-text-secondary hover:text-text-primary hover:bg-surface rounded-lg transition-all duration-200 tooltip" data-tooltip="Settings">
+                    <button onclick="openSettings()" class="p-2 text-text-secondary hover:text-text-primary hover:bg-surface rounded-lg transition-all duration-200 tooltip" data-tooltip="Settings">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
@@ -181,12 +181,12 @@
                     <div class="space-y-3">
                         <div class="flex items-center justify-between text-sm">
                             <span class="text-text-secondary">Completion</span>
-                            <span class="font-medium text-text-primary">65%</span>
+                            <span class="font-medium text-text-primary" id="levelProgressPct">0%</span>
                         </div>
                         <div class="progress-bar">
-                            <div class="progress-fill" style="width: 65%"></div>
+                            <div class="progress-fill" id="levelProgressBar" style="width: 0%"></div>
                         </div>
-                        <div class="text-xs text-text-tertiary">7 of 12 problems solved</div>
+                        <div class="text-xs text-text-tertiary" id="levelProgressLabel">0 of 12 problems solved</div>
                     </div>
                 </div>
 
@@ -214,11 +214,11 @@
                     <h4 class="text-sm font-medium text-text-primary mb-3">Hints Available</h4>
                     <div class="flex items-center space-x-2">
                         <div class="flex space-x-1">
-                            <div class="w-3 h-3 bg-primary-600 rounded-full"></div>
-                            <div class="w-3 h-3 bg-primary-600 rounded-full"></div>
-                            <div class="w-3 h-3 bg-surface-200 rounded-full"></div>
+                            <div class="w-3 h-3 bg-surface-200 rounded-full" id="hintDot1"></div>
+                            <div class="w-3 h-3 bg-surface-200 rounded-full" id="hintDot2"></div>
+                            <div class="w-3 h-3 bg-surface-200 rounded-full" id="hintDot3"></div>
                         </div>
-                        <span class="text-sm text-text-secondary">2 of 3 used</span>
+                        <span class="text-sm text-text-secondary" id="hintCountLabel">0 of 3 used</span>
                     </div>
                 </div>
 
@@ -267,7 +267,7 @@
                     <div class="card p-6 lg:p-8 mb-6">
                         <div class="text-center mb-6">
                             <h2 class="text-2xl lg:text-3xl font-bold text-text-primary mb-2" id="problemTitle">Solve for x</h2>
-                            <p class="text-text-secondary">Find the value of x in the equation below</p>
+                            <p class="text-text-secondary" id="problemSubtitle">Find the value of x in the equation below</p>
                         </div>
 
                         <!-- Math Problem -->
@@ -276,7 +276,7 @@
                                 <div class="text-3xl lg:text-5xl font-bold text-text-primary mb-4" id="mathProblem">
                                     3x + 15 = 42
                                 </div>
-                                <div class="text-lg text-text-secondary">
+                                <div class="text-lg text-text-secondary" id="problemPrompt">
                                     What is the value of x?
                                 </div>
                             </div>
@@ -365,7 +365,7 @@
                         </svg>
                     </div>
                     <h3 class="text-xl font-bold text-text-primary mb-2">Game Paused</h3>
-                    <p class="text-text-secondary">Your progress has been saved automatically</p>
+                    <p class="text-text-secondary">The timer is paused while you take a break</p>
                 </div>
 
                 <div class="space-y-3">
@@ -422,14 +422,14 @@
                             <div class="flex items-center justify-between">
                                 <span class="text-sm text-text-secondary">Sound Effects</span>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only peer" checked />
+                                    <input type="checkbox" class="sr-only peer" id="settingSound" checked />
                                     <div class="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                                 </label>
                             </div>
                             <div class="flex items-center justify-between">
                                 <span class="text-sm text-text-secondary">Background Music</span>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only peer" />
+                                    <input type="checkbox" class="sr-only peer" id="settingMusic" />
                                     <div class="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                                 </label>
                             </div>
@@ -443,13 +443,13 @@
                             <div class="flex items-center justify-between">
                                 <span class="text-sm text-text-secondary">High Contrast</span>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only peer" />
+                                    <input type="checkbox" class="sr-only peer" id="settingContrast" />
                                     <div class="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                                 </label>
                             </div>
                             <div>
                                 <label class="block text-sm text-text-secondary mb-2">Text Size</label>
-                                <select class="input text-sm">
+                                <select class="input text-sm" id="settingTextSize">
                                     <option>Small</option>
                                     <option selected>Medium</option>
                                     <option>Large</option>
@@ -465,7 +465,7 @@
                         <div class="space-y-3">
                             <div>
                                 <label class="block text-sm text-text-secondary mb-2">Difficulty</label>
-                                <select class="input text-sm">
+                                <select class="input text-sm" id="settingDifficulty">
                                     <option>Easy</option>
                                     <option selected>Medium</option>
                                     <option>Hard</option>
@@ -474,7 +474,7 @@
                             <div class="flex items-center justify-between">
                                 <span class="text-sm text-text-secondary">Auto-save Progress</span>
                                 <label class="relative inline-flex items-center cursor-pointer">
-                                    <input type="checkbox" class="sr-only peer" checked />
+                                    <input type="checkbox" class="sr-only peer" id="settingAutosave" checked />
                                     <div class="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
                                 </label>
                             </div>
@@ -483,7 +483,7 @@
                 </div>
 
                 <div class="mt-6 pt-6 border-t border-border">
-                    <button onclick="toggleSettings()" class="btn-primary w-full py-3 text-base font-semibold shadow-elevated hover:shadow-floating active-press">
+                    <button onclick="saveSettings()" class="btn-primary w-full py-3 text-base font-semibold shadow-elevated hover:shadow-floating active-press">
                         Save Settings
                     </button>
                 </div>
@@ -513,6 +513,9 @@
         var gameKey = params.get('game') || 'algebra';
         var config = GAME_CONFIG[gameKey] || GAME_CONFIG.algebra;
 
+        var gameEpochCounter = 0;
+        var gameEnded = false;
+
         var gameState = {
             gameKey: gameKey,
             game: config.title,
@@ -528,7 +531,9 @@
             maxHints: 3,
             correctCount: 0,
             correctAnswer: null,
-            problemType: null
+            problemType: null,
+            processing: false,
+            epoch: ++gameEpochCounter
         };
 
         var gameTimer;
@@ -598,6 +603,8 @@
 
         function restartGame() {
             if (confirm('Are you sure you want to restart this level? Your current progress will be lost.')) {
+                gameEnded = false;
+                clearInterval(gameTimer);
                 gameState = {
                     gameKey: gameKey,
                     game: config.title,
@@ -613,10 +620,11 @@
                     maxHints: 3,
                     correctCount: 0,
                     correctAnswer: null,
-                    problemType: null
+                    problemType: null,
+                    processing: false,
+                    epoch: ++gameEpochCounter
                 };
                 document.getElementById('pauseModal').classList.add('hidden');
-                if (gameTimer) clearInterval(gameTimer);
                 startGameTimer();
                 updateDisplay();
                 generateNewProblem();
@@ -624,13 +632,15 @@
         }
 
         function exitGame() {
-            if (confirm('Are you sure you want to exit? Your progress will be saved.')) {
+            if (confirm('Are you sure you want to exit? Current game progress will be lost.')) {
                 window.location.href = 'student_dashboard.html';
             }
         }
 
         // Answer Checking
         function checkAnswer() {
+            if (gameState.processing) return;
+
             var answerInput = document.getElementById('answerInput');
             var userAnswer = parseFloat(answerInput.value.trim());
             var correctAnswer = gameState.correctAnswer;
@@ -642,6 +652,8 @@
                 return;
             }
 
+            gameState.processing = true;
+            var epoch = gameState.epoch;
             var elapsedSeconds = Math.abs((Date.now() - gameState.problemStart) / 1000);
 
             if (Math.abs(userAnswer - correctAnswer) < 0.01) {
@@ -653,6 +665,8 @@
                 showAchievement('Correct!', 'Great work solving that!');
 
                 setTimeout(() => {
+                    if (epoch !== gameState.epoch) return;
+                    gameState.processing = false;
                     if (gameState.currentProblem >= gameState.totalProblems) {
                         endGame('completed');
                     } else {
@@ -666,14 +680,16 @@
                 showFeedback('Incorrect. The answer is ' + correctAnswer + '.', 'error');
                 showAchievement('Keep Trying!', 'Let\'s get the next one right!');
 
-                if (gameState.lives <= 0) {
-                    setTimeout(() => endGame('no_lives'), 1500);
-                } else {
-                    setTimeout(() => {
+                setTimeout(() => {
+                    if (epoch !== gameState.epoch) return;
+                    gameState.processing = false;
+                    if (gameState.lives <= 0) {
+                        endGame('no_lives');
+                    } else {
                         gameState.currentProblem++;
                         generateNewProblem();
-                    }, 1500);
-                }
+                    }
+                }, 1500);
             }
 
             updateDisplay();
@@ -693,6 +709,10 @@
             gameState.problemType = Math.floor(Math.random() * 3);
             gameState.problemStart = Date.now();
 
+            var promptEl = document.getElementById('problemPrompt');
+            var subtitleEl = document.getElementById('problemSubtitle');
+            var inputEl = document.getElementById('answerInput');
+
             switch (gameState.problemType) {
                 case 0: // ax + b = c
                     a = Math.floor(Math.random() * 9) + 2;
@@ -702,6 +722,9 @@
                     gameState.correctAnswer = x;
                     document.getElementById('mathProblem').textContent = a + 'x + ' + b + ' = ' + c;
                     document.getElementById('problemTitle').textContent = 'Solve for x';
+                    promptEl.textContent = 'What is the value of x?';
+                    subtitleEl.textContent = 'Find the value of x in the equation below';
+                    inputEl.placeholder = 'Enter x value';
                     break;
                 case 1: // ax - b = c
                     a = Math.floor(Math.random() * 9) + 2;
@@ -711,6 +734,9 @@
                     gameState.correctAnswer = x;
                     document.getElementById('mathProblem').textContent = a + 'x - ' + b + ' = ' + c;
                     document.getElementById('problemTitle').textContent = 'Solve for x';
+                    promptEl.textContent = 'What is the value of x?';
+                    subtitleEl.textContent = 'Find the value of x in the equation below';
+                    inputEl.placeholder = 'Enter x value';
                     break;
                 default: // a + b = ?  (addition)
                     a = Math.floor(Math.random() * 50) + 10;
@@ -718,6 +744,9 @@
                     gameState.correctAnswer = a + b;
                     document.getElementById('mathProblem').textContent = a + ' + ' + b + ' = ?';
                     document.getElementById('problemTitle').textContent = 'Find the sum';
+                    promptEl.textContent = 'What is the total?';
+                    subtitleEl.textContent = 'Add the two numbers to find the sum';
+                    inputEl.placeholder = 'Enter the sum';
                     break;
             }
 
@@ -728,15 +757,16 @@
 
         function showProblemProgress() {
             var pct = Math.round((gameState.currentProblem - 1) / gameState.totalProblems * 100);
-            var el = document.querySelector('#sidePanel .progress-fill');
-            if (el) el.style.width = pct + '%';
-            var label = document.querySelector('#sidePanel .text-xs.text-text-tertiary');
-            if (label) label.textContent = (gameState.currentProblem - 1) + ' of ' + gameState.totalProblems + ' problems solved';
-            var completion = document.querySelector('#sidePanel .flex.items-center.justify-between.text-sm .font-medium');
-            if (completion) completion.textContent = pct + '%';
+            var bar = document.getElementById('levelProgressBar');
+            var pctEl = document.getElementById('levelProgressPct');
+            var labelEl = document.getElementById('levelProgressLabel');
+            if (bar) bar.style.width = pct + '%';
+            if (pctEl) pctEl.textContent = pct + '%';
+            if (labelEl) labelEl.textContent = (gameState.currentProblem - 1) + ' of ' + gameState.totalProblems + ' problems solved';
         }
 
         function skipProblem() {
+            if (gameState.processing) return;
             if (gameState.currentProblem < gameState.totalProblems) {
                 gameState.currentProblem++;
                 generateNewProblem();
@@ -771,7 +801,17 @@
                 hint = hints[Math.min(gameState.hintsUsed - 1, hints.length - 1)];
             }
             alert('Hint ' + gameState.hintsUsed + ': ' + hint);
+            updateHintsDisplay();
             updateDisplay();
+        }
+
+        function updateHintsDisplay() {
+            for (var i = 1; i <= 3; i++) {
+                var dot = document.getElementById('hintDot' + i);
+                if (dot) dot.className = 'w-3 h-3 rounded-full ' + (i <= gameState.hintsUsed ? 'bg-primary-600' : 'bg-surface-200');
+            }
+            var label = document.getElementById('hintCountLabel');
+            if (label) label.textContent = gameState.hintsUsed + ' of ' + gameState.maxHints + ' used';
         }
 
         // Achievement System
@@ -797,6 +837,13 @@
         function toggleSidePanel() {
             const sidePanel = document.getElementById('sidePanel');
             sidePanel.classList.toggle('hidden');
+            if (window.innerWidth < 1024) {
+                if (sidePanel.classList.contains('hidden')) {
+                    sidePanel.classList.remove('fixed', 'top-16', 'left-0', 'bottom-0', 'z-40', 'shadow-floating', 'max-h-full', 'overflow-y-auto');
+                } else {
+                    sidePanel.classList.add('fixed', 'top-16', 'left-0', 'bottom-0', 'z-40', 'shadow-floating', 'max-h-full', 'overflow-y-auto');
+                }
+            }
         }
 
         function toggleMobileStats() {
@@ -807,6 +854,41 @@
         function toggleSettings() {
             const modal = document.getElementById('settingsModal');
             modal.classList.toggle('hidden');
+        }
+
+        function openSettings() {
+            const user = window.STEMQUEST_STORE ? STEMQUEST_STORE.currentUser() : null;
+            const prefs = (user && user.preferences) ? user.preferences : {};
+            if (document.getElementById('settingSound')) document.getElementById('settingSound').checked = prefs.sound !== false;
+            if (document.getElementById('settingMusic')) document.getElementById('settingMusic').checked = prefs.music !== false;
+            if (document.getElementById('settingContrast')) document.getElementById('settingContrast').checked = !!prefs.contrast;
+            if (document.getElementById('settingTextSize')) document.getElementById('settingTextSize').value = prefs.textSize || 'Medium';
+            if (document.getElementById('settingDifficulty')) document.getElementById('settingDifficulty').value = prefs.difficulty || 'Medium';
+            if (document.getElementById('settingAutosave')) document.getElementById('settingAutosave').checked = prefs.autosave !== false;
+            toggleSettings();
+        }
+
+        function saveSettings() {
+            const prefs = {
+                sound: document.getElementById('settingSound').checked,
+                music: document.getElementById('settingMusic').checked,
+                contrast: document.getElementById('settingContrast').checked,
+                textSize: document.getElementById('settingTextSize').value,
+                difficulty: document.getElementById('settingDifficulty').value,
+                autosave: document.getElementById('settingAutosave').checked
+            };
+            if (window.STEMQUEST_STORE) STEMQUEST_STORE.updatePreferences(prefs);
+            applySettings();
+            showFeedback('Settings saved successfully!', 'success');
+            toggleSettings();
+        }
+
+        function applySettings() {
+            const user = window.STEMQUEST_STORE ? STEMQUEST_STORE.currentUser() : null;
+            const prefs = (user && user.preferences) ? user.preferences : {};
+            document.body.style.filter = prefs.contrast ? 'contrast(1.15)' : '';
+            const sizes = { Small: '14px', Medium: '16px', Large: '18px', 'Extra Large': '20px' };
+            document.documentElement.style.fontSize = sizes[prefs.textSize] || '16px';
         }
 
         // Calculator Functions
@@ -873,6 +955,9 @@
         // Game result handling - records the outcome to the data store so the
         // dashboard, profile and progress pages all reflect real progress.
         function endGame(reason) {
+            if (gameEnded) return;
+            gameEnded = true;
+            gameState.processing = true;
             clearInterval(gameTimer);
 
             var elapsedTotal = Math.round((config.total * 45 - gameState.timeRemaining));

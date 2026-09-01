@@ -148,7 +148,7 @@
                         <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
                         </svg>
-                        <select class="input text-sm">
+                        <select class="input text-sm" id="dateFilter">
                             <option value="7">Last 7 days</option>
                             <option value="30" selected>Last 30 days</option>
                             <option value="90">Last 3 months</option>
@@ -161,7 +161,7 @@
                         <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"/>
                         </svg>
-                        <select class="input text-sm">
+                        <select class="input text-sm" id="subjectFilter">
                             <option value="all">All Subjects</option>
                             <option value="math">Mathematics</option>
                             <option value="science">Science</option>
@@ -175,7 +175,7 @@
                         <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
                         </svg>
-                        <select class="input text-sm">
+                        <select class="input text-sm" id="difficultyFilter">
                             <option value="all">All Levels</option>
                             <option value="beginner">Beginner</option>
                             <option value="intermediate">Intermediate</option>
@@ -804,9 +804,9 @@
 
         // Filter reset function
         function resetFilters() {
-            var selects = document.querySelectorAll('select');
-            selects.forEach(function(select) {
-                if (select.options[0]) {
+            ['dateFilter', 'subjectFilter', 'difficultyFilter'].forEach(function(id) {
+                var select = document.getElementById(id);
+                if (select && select.options[0]) {
                     select.selectedIndex = 0;
                 }
             });

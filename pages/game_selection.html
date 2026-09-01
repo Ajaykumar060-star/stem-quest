@@ -706,7 +706,6 @@
         document.querySelector('select').addEventListener('change', function(e) {
             const selectedLang = e.target.value;
             localStorage.setItem('stemquest_language', selectedLang);
-            console.log('Language changed to:', selectedLang);
         });
 
         // Load saved language preference
@@ -742,18 +741,6 @@
             });
         });
 
-        // Add click tracking for analytics
-        document.querySelectorAll('.game-card a').forEach(link => {
-            link.addEventListener('click', function(e) {
-                const gameTitle = this.closest('.game-card').querySelector('h3').textContent;
-                
-                // Store selected game info
-                sessionStorage.setItem('stemquest_current_game', JSON.stringify({
-                    title: gameTitle,
-                    startTime: new Date().toISOString()
-                }));
-            });
-        });
-    </script>
+        </script>
 </body>
 </html>

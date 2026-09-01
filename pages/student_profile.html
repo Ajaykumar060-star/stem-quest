@@ -697,6 +697,16 @@
                 showNotification('Language preference updated!', 'success');
             });
 
+            // Difficulty preference
+            document.querySelectorAll('input[name="difficulty"]').forEach(function(radio) {
+                radio.addEventListener('change', function(e) {
+                    if (e.target.checked) {
+                        STEMQUEST_STORE.updatePreferences({ difficulty: this.value });
+                        showNotification('Difficulty preference updated!', 'success');
+                    }
+                });
+            });
+
             // Load saved data
             loadSavedData();
         });
@@ -711,7 +721,7 @@
             document.getElementById('studentName').textContent = displayName;
             document.getElementById('studentIdText').textContent = 'Student ID: ' + user.studentId;
             document.getElementById('gradeLevelDisplay').textContent = user.grade;
-            document.getElementById('learningLevelDisplay').textContent = '1';
+            document.getElementById('learningLevelDisplay').textContent = Math.max(1, Math.floor((user.stats.points || 0) / 500) + 1);
             document.getElementById('statPoints').textContent = (user.stats.points || 0).toLocaleString();
             document.getElementById('statGames').textContent = user.stats.gamesCompleted || 0;
             document.getElementById('statBadges').textContent = user.badges ? user.badges.length : 0;

@@ -148,7 +148,7 @@
                         </div>
 
                         <div class="text-sm">
-                            <a href="#" class="font-medium text-primary-600 hover:text-primary-500 transition-colors">
+                            <a href="javascript:void(0)" onclick="forgotPassword()" class="font-medium text-primary-600 hover:text-primary-500 transition-colors">
                                 Forgot password?
                             </a>
                         </div>
@@ -337,6 +337,10 @@
             const errorElement = document.getElementById(elementId);
             errorElement.textContent = message;
             errorElement.classList.remove('hidden');
+        }
+
+        function forgotPassword() {
+            showError('generalError', 'Password reset needs a teacher or admin account in this demo. Try the demo account: student / password123');
         }
         
         function clearErrors() {

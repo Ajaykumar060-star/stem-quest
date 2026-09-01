@@ -126,7 +126,7 @@
                 <div
                   class="w-8 h-8 bg-gradient-to-br from-accent-400 to-accent-600 rounded-full flex items-center justify-center"
                 >
-                  <span class="text-sm font-bold text-white">A</span>
+                  <span class="text-sm font-bold text-white" id="headerAvatarInitials">A</span>
                 </div>
                 <svg
                   class="w-4 h-4 text-text-tertiary"
@@ -454,6 +454,7 @@
                   </div>
                   <span
                     class="px-2 py-1 bg-success-100 text-success-600 text-xs font-medium rounded-full"
+                    id="mathPct"
                     >75% Complete</span
                   >
                 </div>
@@ -461,6 +462,7 @@
                 <div class="progress-bar mb-4">
                   <div
                     class="progress-fill bg-blue-500"
+                    id="mathBar"
                     style="width: 75%"
                   ></div>
                 </div>
@@ -526,6 +528,7 @@
                     </div>
                   </div>
                   <span class="text-sm text-text-secondary"
+                    id="mathRecent"
                     >3 recent badges</span
                   >
                 </div>
@@ -570,6 +573,7 @@
                   </div>
                   <span
                     class="px-2 py-1 bg-warning-100 text-warning-600 text-xs font-medium rounded-full"
+                    id="sciencePct"
                     >62% Complete</span
                   >
                 </div>
@@ -577,6 +581,7 @@
                 <div class="progress-bar mb-4">
                   <div
                     class="progress-fill bg-secondary-500"
+                    id="scienceBar"
                     style="width: 62%"
                   ></div>
                 </div>
@@ -625,6 +630,7 @@
                     </div>
                   </div>
                   <span class="text-sm text-text-secondary"
+                    id="scienceRecent"
                     >2 recent badges</span
                   >
                 </div>
@@ -669,6 +675,7 @@
                   </div>
                   <span
                     class="px-2 py-1 bg-primary-100 text-primary-600 text-xs font-medium rounded-full"
+                    id="techPct"
                     >45% Complete</span
                   >
                 </div>
@@ -676,6 +683,7 @@
                 <div class="progress-bar mb-4">
                   <div
                     class="progress-fill bg-accent-500"
+                    id="techBar"
                     style="width: 45%"
                   ></div>
                 </div>
@@ -711,6 +719,7 @@
                     </div>
                   </div>
                   <span class="text-sm text-text-secondary"
+                    id="techRecent"
                     >1 recent badge</span
                   >
                 </div>
@@ -768,6 +777,7 @@
                 <div class="progress-bar mb-4">
                   <div
                     class="progress-fill bg-purple-500"
+                    id="engBar"
                     style="width: 15%"
                   ></div>
                 </div>
@@ -1025,8 +1035,8 @@
       }
 
       function syncProgress() {
-        // Persist is automatic with the data store; this just confirms.
-        STEMQUEST_STORE.currentUser();
+        // Persist is automatic; this re-renders the real data and confirms.
+        refreshDashboard();
         showAchievementNotification("Progress synced successfully!");
       }
 
@@ -1077,7 +1087,6 @@
       document.querySelector("select").addEventListener("change", function (e) {
         const selectedLang = e.target.value;
         localStorage.setItem("stemquest_language", selectedLang);
-        console.log("Language changed to:", selectedLang);
       });
 
       // Load saved language preference
@@ -1089,13 +1098,19 @@
       });
 
       // Mock data loading and progress updates
-      window.addEventListener("load", function () {
+      function refreshDashboard() {
         var user = STEMQUEST_STORE.currentUser();
         if (!user) return;
 
         var name = user.displayName || user.username;
         document.getElementById("headerUserName").textContent = name.split(' ')[0];
         document.getElementById("welcomeName").textContent = name.split(' ')[0];
+
+        // Header avatar initials
+        var initialsEl = document.getElementById("headerAvatarInitials");
+        if (initialsEl) {
+          initialsEl.textContent = name.trim().split(/\s+/).map(function (w) { return w[0]; }).slice(0, 2).join('').toUpperCase() || 'S';
+        }
 
         // Level derived from points (rough scale)
         var level = Math.max(1, Math.floor((user.stats.points || 0) / 500) + 1);
@@ -1140,95 +1155,55 @@
           }).join('');
         }
 
+        // Subject module cards - real progress and games played per subject
+        var progress = STEMQUEST_STORE.subjectProgress();
+        var history = user.gameHistory || [];
+        function gamesFor(subject) {
+          return history.filter(function (g) { return g.subject === subject; }).length;
+        }
+        var mathGames = gamesFor('Mathematics');
+        var scienceGames = gamesFor('Science');
+        var techGames = gamesFor('Technology');
+        var engGames = gamesFor('Engineering');
+
+        var mathPct = document.getElementById("mathPct");
+        var mathBar = document.getElementById("mathBar");
+        var mathRecent = document.getElementById("mathRecent");
+        if (mathPct) mathPct.textContent = Math.round(progress.Mathematics) + "% Complete";
+        if (mathBar) mathBar.style.width = progress.Mathematics + "%";
+        if (mathRecent) mathRecent.textContent = mathGames + (mathGames === 1 ? " game played" : " games played");
+
+        var sciencePct = document.getElementById("sciencePct");
+        var scienceBar = document.getElementById("scienceBar");
+        var scienceRecent = document.getElementById("scienceRecent");
+        if (sciencePct) sciencePct.textContent = Math.round(progress.Science) + "% Complete";
+        if (scienceBar) scienceBar.style.width = progress.Science + "%";
+        if (scienceRecent) scienceRecent.textContent = scienceGames + (scienceGames === 1 ? " game played" : " games played");
+
+        var techPct = document.getElementById("techPct");
+        var techBar = document.getElementById("techBar");
+        var techRecent = document.getElementById("techRecent");
+        if (techPct) techPct.textContent = Math.round(progress.Technology) + "% Complete";
+        if (techBar) techBar.style.width = progress.Technology + "%";
+        if (techRecent) techRecent.textContent = techGames + (techGames === 1 ? " game played" : " games played");
+
+        var engBar = document.getElementById("engBar");
+        if (engBar) engBar.style.width = progress.Engineering + "%";
+
         // Friendly first-run achievement notice (only once, only if no badges)
         if (badges.length === 0) {
           setTimeout(() => {
             showAchievementNotification("Welcome! Play your first game to earn badges.");
           }, 1500);
         }
-      });
+      }
+
+      window.addEventListener("load", refreshDashboard);
 
       // Service Worker registration for offline functionality
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
-          navigator.serviceWorker
-            .register("../sw.js")
-            .then(function (registration) {
-              console.log("ServiceWorker registration successful");
-            })
-            .catch(function (err) {
-              console.log("ServiceWorker registration failed", err);
-            });
-        });
-      }
-
-      // IndexedDB setup for local data storage
-      let db;
-      const request = indexedDB.open("STEMQuestDB", 1);
-
-      request.onerror = function (event) {
-        console.log("Database error: " + event.target.errorCode);
-      };
-
-      request.onsuccess = function (event) {
-        db = event.target.result;
-        console.log("Database opened successfully");
-      };
-
-      request.onupgradeneeded = function (event) {
-        db = event.target.result;
-
-        // Create object stores for different data types
-        if (!db.objectStoreNames.contains("progress")) {
-          const progressStore = db.createObjectStore("progress", {
-            keyPath: "subject",
-          });
-        }
-
-        if (!db.objectStoreNames.contains("achievements")) {
-          const achievementStore = db.createObjectStore("achievements", {
-            keyPath: "id",
-            autoIncrement: true,
-          });
-        }
-
-        if (!db.objectStoreNames.contains("gameStates")) {
-          const gameStateStore = db.createObjectStore("gameStates", {
-            keyPath: "gameId",
-          });
-        }
-      };
-
-      // Function to save progress to IndexedDB
-      function saveProgress(subject, progress) {
-        if (!db) return;
-
-        const transaction = db.transaction(["progress"], "readwrite");
-        const store = transaction.objectStore("progress");
-
-        store.put({
-          subject: subject,
-          progress: progress,
-          lastUpdated: new Date().toISOString(),
-        });
-      }
-
-      // Function to load progress from IndexedDB
-      function loadProgress(subject) {
-        if (!db) return Promise.resolve(null);
-
-        return new Promise((resolve, reject) => {
-          const transaction = db.transaction(["progress"], "readonly");
-          const store = transaction.objectStore("progress");
-          const request = store.get(subject);
-
-          request.onsuccess = function () {
-            resolve(request.result);
-          };
-
-          request.onerror = function () {
-            reject(request.error);
-          };
+          navigator.serviceWorker.register("../sw.js").catch(function () {});
         });
       }
     </script>

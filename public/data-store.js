@@ -287,6 +287,7 @@
       user.badges = user.badges || [];
 
       // Award milestone badges automatically
+      var before = user.badges.length;
       var totalGames = user.gameHistory.length;
       if (totalGames === 1 && !hasBadge(user, 'first-steps')) {
         user.badges.push({ id: 'first-steps', name: 'First Steps', blurb: 'Played your very first game', date: new Date().toISOString() });
@@ -300,7 +301,7 @@
       user.stats.badgesEarned = user.badges.length;
 
       persist();
-      return user.badges[user.badges.length - 1] || null;
+      return user.badges.length > before ? user.badges[user.badges.length - 1] : null;
     },
 
     setGoal: function (goal) {
