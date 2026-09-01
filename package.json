@@ -1,0 +1,19 @@
+{
+  "name": "stem-quest",
+  "version": "1.0.0",
+  "description": "STEM Quest - a gamified learning platform for STEM subjects, built with plain HTML, Tailwind CSS, and vanilla JavaScript.",
+  "main": "index.html",
+  "dependencies": {},
+  "scripts": {
+    "build:css": "npx tailwindcss -i ./css/tailwind.css -o ./css/main.css",
+    "watch:css": "npx tailwindcss -i ./css/tailwind.css -o ./css/main.css --watch",
+    "dev": "npm run build:css && live-server --port=8080",
+    "serve": "npx live-server --port=8080"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "tailwindcss": "^3.4.17",
+    "live-server": "^1.2.2"
+  }
+}

@@ -1,0 +1,958 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Math Puzzle Challenge - STEM Quest</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="../public/data-store.js"></script>
+<script src="../public/auth.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-background to-secondary-50 overflow-hidden">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.5"/>
+                </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid)"/>
+        </svg>
+    </div>
+
+    <!-- Game Header -->
+    <header class="relative z-20 bg-white/95 backdrop-blur-sm border-b border-border shadow-subtle">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Left Section: Back & Game Info -->
+                <div class="flex items-center space-x-4">
+                    <button onclick="pauseGame()" class="flex items-center space-x-2 px-3 py-2 text-text-secondary hover:text-text-primary hover:bg-surface rounded-lg transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                        <span class="hidden sm:inline font-medium">Back</span>
+                    </button>
+                    
+                    <div class="h-6 w-px bg-border"></div>
+                    
+                    <div class="flex items-center space-x-3">
+                        <div class="w-8 h-8 bg-gradient-to-br from-accent-400 to-accent-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold text-text-primary" id="gameTitle">Math Challenge</h1>
+                            <p class="text-sm text-text-secondary" id="gameSubtitle">Level 1 - Algebra Basics</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Center Section: Game Stats -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <!-- Score -->
+                    <div class="flex items-center space-x-2 px-3 py-2 bg-success-50 border border-success-100 rounded-lg">
+                        <svg class="w-4 h-4 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                        </svg>
+                        <div>
+                            <p class="text-xs text-success-600 font-medium">Score</p>
+                            <p class="text-lg font-bold text-success-600" id="gameScore">2,450</p>
+                        </div>
+                    </div>
+
+                    <!-- Timer -->
+                    <div class="flex items-center space-x-2 px-3 py-2 bg-warning-50 border border-warning-100 rounded-lg">
+                        <svg class="w-4 h-4 text-warning-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                        </svg>
+                        <div>
+                            <p class="text-xs text-warning-600 font-medium">Time</p>
+                            <p class="text-lg font-bold text-warning-600" id="gameTimer">05:42</p>
+                        </div>
+                    </div>
+
+                    <!-- Lives -->
+                    <div class="flex items-center space-x-2 px-3 py-2 bg-error-50 border border-error-100 rounded-lg">
+                        <svg class="w-4 h-4 text-error-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                        </svg>
+                        <div>
+                            <p class="text-xs text-error-600 font-medium">Lives</p>
+                            <div class="flex space-x-1" id="livesDisplay">
+                                <div class="w-2 h-2 bg-error-600 rounded-full"></div>
+                                <div class="w-2 h-2 bg-error-600 rounded-full"></div>
+                                <div class="w-2 h-2 bg-error-200 rounded-full"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Section: Controls -->
+                <div class="flex items-center space-x-2">
+                    <!-- Mobile Stats Toggle -->
+                    <button onclick="toggleMobileStats()" class="md:hidden p-2 text-text-secondary hover:text-text-primary hover:bg-surface rounded-lg transition-all duration-200">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                        </svg>
+                    </button>
+
+                    <!-- Hint Button -->
+                    <button onclick="showHint()" class="p-2 text-primary-600 hover:text-primary-700 hover:bg-primary-50 rounded-lg transition-all duration-200 tooltip" data-tooltip="Get Hint">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                        </svg>
+                    </button>
+
+                    <!-- Settings -->
+                    <button onclick="toggleSettings()" class="p-2 text-text-secondary hover:text-text-primary hover:bg-surface rounded-lg transition-all duration-200 tooltip" data-tooltip="Settings">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/>
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/>
+                        </svg>
+                    </button>
+
+                    <!-- Pause Button -->
+                    <button onclick="pauseGame()" class="btn-primary px-4 py-2 shadow-elevated hover:shadow-floating active-press">
+                        <span class="flex items-center space-x-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6"/>
+                            </svg>
+                            <span class="hidden sm:inline">Pause</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Mobile Stats Panel -->
+        <div id="mobileStatsPanel" class="md:hidden bg-surface border-t border-border px-4 py-3 hidden">
+            <div class="flex items-center justify-between space-x-4">
+                <div class="flex items-center space-x-2">
+                    <svg class="w-4 h-4 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                    </svg>
+                    <span class="text-sm font-medium text-success-600">2,450</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <svg class="w-4 h-4 text-warning-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                    <span class="text-sm font-medium text-warning-600">05:42</span>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <svg class="w-4 h-4 text-error-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"/>
+                    </svg>
+                    <div class="flex space-x-1">
+                        <div class="w-2 h-2 bg-error-600 rounded-full"></div>
+                        <div class="w-2 h-2 bg-error-600 rounded-full"></div>
+                        <div class="w-2 h-2 bg-error-200 rounded-full"></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Game Container -->
+    <div class="relative z-10 flex h-screen pt-16">
+        <!-- Side Panel -->
+        <div id="sidePanel" class="hidden lg:flex flex-col w-80 bg-white border-r border-border shadow-subtle">
+            <!-- Panel Header -->
+            <div class="p-4 border-b border-border">
+                <div class="flex items-center justify-between">
+                    <h3 class="text-lg font-semibold text-text-primary">Game Tools</h3>
+                    <button onclick="toggleSidePanel()" class="p-1 text-text-secondary hover:text-text-primary rounded transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Panel Content -->
+            <div class="flex-1 overflow-y-auto p-4 space-y-6">
+                <!-- Progress Section -->
+                <div>
+                    <h4 class="text-sm font-medium text-text-primary mb-3">Level Progress</h4>
+                    <div class="space-y-3">
+                        <div class="flex items-center justify-between text-sm">
+                            <span class="text-text-secondary">Completion</span>
+                            <span class="font-medium text-text-primary">65%</span>
+                        </div>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                        <div class="text-xs text-text-tertiary">7 of 12 problems solved</div>
+                    </div>
+                </div>
+
+                <!-- Quick Reference -->
+                <div>
+                    <h4 class="text-sm font-medium text-text-primary mb-3">Quick Reference</h4>
+                    <div class="space-y-2">
+                        <div class="card p-3">
+                            <h5 class="text-sm font-medium text-text-primary mb-1">Algebra Rules</h5>
+                            <ul class="text-xs text-text-secondary space-y-1">
+                                <li>• Same operation on both sides</li>
+                                <li>• Combine like terms</li>
+                                <li>• Isolate the variable</li>
+                            </ul>
+                        </div>
+                        <div class="card p-3">
+                            <h5 class="text-sm font-medium text-text-primary mb-1">Order of Operations</h5>
+                            <p class="text-xs text-text-secondary">PEMDAS: Parentheses, Exponents, Multiplication, Division, Addition, Subtraction</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Hints Used -->
+                <div>
+                    <h4 class="text-sm font-medium text-text-primary mb-3">Hints Available</h4>
+                    <div class="flex items-center space-x-2">
+                        <div class="flex space-x-1">
+                            <div class="w-3 h-3 bg-primary-600 rounded-full"></div>
+                            <div class="w-3 h-3 bg-primary-600 rounded-full"></div>
+                            <div class="w-3 h-3 bg-surface-200 rounded-full"></div>
+                        </div>
+                        <span class="text-sm text-text-secondary">2 of 3 used</span>
+                    </div>
+                </div>
+
+                <!-- Calculator -->
+                <div>
+                    <h4 class="text-sm font-medium text-text-primary mb-3">Calculator</h4>
+                    <div class="card p-3">
+                        <div class="bg-surface-100 p-2 rounded text-right text-lg font-mono mb-2" id="calculatorDisplay">0</div>
+                        <div class="grid grid-cols-4 gap-1">
+                            <button class="btn-outline text-sm py-2" onclick="clearCalculator()">C</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('/')">/</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('*')">×</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('-')">-</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('7')">7</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('8')">8</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('9')">9</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('+')">+</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('4')">4</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('5')">5</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('6')">6</button>
+                            <button class="btn-primary text-sm py-2 row-span-2" onclick="calculateResult()">=</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('1')">1</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('2')">2</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('3')">3</button>
+                            <button class="btn-outline text-sm py-2 col-span-2" onclick="calculatorInput('0')">0</button>
+                            <button class="btn-outline text-sm py-2" onclick="calculatorInput('.')">.</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Canvas Area -->
+        <div class="flex-1 flex flex-col bg-gradient-to-br from-surface to-surface-100">
+            <!-- Toggle Side Panel Button (Mobile) -->
+            <button onclick="toggleSidePanel()" class="lg:hidden absolute top-4 left-4 z-30 p-2 bg-white border border-border rounded-lg shadow-subtle text-text-secondary hover:text-text-primary transition-all duration-200">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                </svg>
+            </button>
+
+            <!-- Game Canvas -->
+            <div class="flex-1 p-4 lg:p-8 flex items-center justify-center">
+                <div class="w-full max-w-4xl mx-auto">
+                    <!-- Game Problem Display -->
+                    <div class="card p-6 lg:p-8 mb-6">
+                        <div class="text-center mb-6">
+                            <h2 class="text-2xl lg:text-3xl font-bold text-text-primary mb-2" id="problemTitle">Solve for x</h2>
+                            <p class="text-text-secondary">Find the value of x in the equation below</p>
+                        </div>
+
+                        <!-- Math Problem -->
+                        <div class="bg-gradient-to-r from-primary-50 to-secondary-50 rounded-xl p-6 lg:p-8 mb-6">
+                            <div class="text-center">
+                                <div class="text-3xl lg:text-5xl font-bold text-text-primary mb-4" id="mathProblem">
+                                    3x + 15 = 42
+                                </div>
+                                <div class="text-lg text-text-secondary">
+                                    What is the value of x?
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Answer Input -->
+                        <div class="max-w-md mx-auto">
+                            <label for="answerInput" class="block text-sm font-medium text-text-primary mb-2">
+                                Your Answer:
+                            </label>
+                            <div class="flex space-x-3">
+                                <input type="text" id="answerInput" class="input flex-1 text-center text-xl font-semibold" placeholder="Enter x value" autocomplete="off" />
+                                <button onclick="checkAnswer()" class="btn-primary px-6 py-3 text-lg font-semibold shadow-elevated hover:shadow-floating active-press">
+                                    Check
+                                </button>
+                            </div>
+                            <div id="answerFeedback" class="mt-3 text-center hidden"></div>
+                        </div>
+                    </div>
+
+                    <!-- Game Controls -->
+                    <div class="flex flex-wrap items-center justify-center gap-3">
+                        <button onclick="skipProblem()" class="btn-outline px-4 py-2 hover-lift active-press">
+                            <span class="flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 9l3 3m0 0l-3 3m3-3H8m13 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Skip</span>
+                            </span>
+                        </button>
+                        
+                        <button onclick="showHint()" class="btn-outline px-4 py-2 hover-lift active-press">
+                            <span class="flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                                </svg>
+                                <span>Hint</span>
+                            </span>
+                        </button>
+                        
+                        <button onclick="resetProblem()" class="btn-outline px-4 py-2 hover-lift active-press">
+                            <span class="flex items-center space-x-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                                </svg>
+                                <span>Reset</span>
+                            </span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Achievement Notification -->
+    <div id="achievementNotification" class="fixed top-20 right-4 z-50 transform translate-x-full transition-transform duration-300 ease-out">
+        <div class="bg-white border border-success-200 rounded-lg shadow-floating p-4 max-w-sm">
+            <div class="flex items-start space-x-3">
+                <div class="w-10 h-10 bg-gradient-to-br from-accent-400 to-accent-600 rounded-full flex items-center justify-center flex-shrink-0">
+                    <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                    </svg>
+                </div>
+                <div class="flex-1">
+                    <h4 class="text-sm font-semibold text-text-primary">Achievement Unlocked!</h4>
+                    <p class="text-sm text-text-secondary mt-1" id="achievementText">Problem Solver - Solved 5 problems in a row!</p>
+                </div>
+                <button onclick="hideAchievement()" class="text-text-tertiary hover:text-text-secondary transition-colors">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Modal -->
+    <div id="pauseModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-floating max-w-md w-full p-6">
+                <div class="text-center mb-6">
+                    <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 9v6m4-6v6"/>
+                        </svg>
+                    </div>
+                    <h3 class="text-xl font-bold text-text-primary mb-2">Game Paused</h3>
+                    <p class="text-text-secondary">Your progress has been saved automatically</p>
+                </div>
+
+                <div class="space-y-3">
+                    <button onclick="resumeGame()" class="btn-primary w-full py-3 text-base font-semibold shadow-elevated hover:shadow-floating active-press">
+                        <span class="flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.828 14.828a4 4 0 01-5.656 0M9 10h1m4 0h1m-6 4h8m-9 5a9 9 0 1118 0 9 9 0 01-18 0z"/>
+                            </svg>
+                            <span>Resume Game</span>
+                        </span>
+                    </button>
+                    
+                    <button onclick="restartGame()" class="btn-outline w-full py-3 text-base font-semibold hover-lift active-press">
+                        <span class="flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                            </svg>
+                            <span>Restart Level</span>
+                        </span>
+                    </button>
+                    
+                    <button onclick="exitGame()" class="btn-outline w-full py-3 text-base font-semibold text-error-600 border-error-200 hover:bg-error-50 hover-lift active-press">
+                        <span class="flex items-center justify-center space-x-2">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/>
+                            </svg>
+                            <span>Exit to Dashboard</span>
+                        </span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settingsModal" class="fixed inset-0 z-50 hidden">
+        <div class="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        <div class="relative z-10 flex items-center justify-center min-h-screen p-4">
+            <div class="bg-white rounded-xl shadow-floating max-w-md w-full p-6">
+                <div class="flex items-center justify-between mb-6">
+                    <h3 class="text-xl font-bold text-text-primary">Game Settings</h3>
+                    <button onclick="toggleSettings()" class="p-1 text-text-secondary hover:text-text-primary rounded transition-colors">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <div class="space-y-6">
+                    <!-- Sound Settings -->
+                    <div>
+                        <h4 class="text-sm font-medium text-text-primary mb-3">Audio</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-text-secondary">Sound Effects</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked />
+                                    <div class="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                                </label>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-text-secondary">Background Music</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Display Settings -->
+                    <div>
+                        <h4 class="text-sm font-medium text-text-primary mb-3">Display</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-text-secondary">High Contrast</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" />
+                                    <div class="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                                </label>
+                            </div>
+                            <div>
+                                <label class="block text-sm text-text-secondary mb-2">Text Size</label>
+                                <select class="input text-sm">
+                                    <option>Small</option>
+                                    <option selected>Medium</option>
+                                    <option>Large</option>
+                                    <option>Extra Large</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Game Settings -->
+                    <div>
+                        <h4 class="text-sm font-medium text-text-primary mb-3">Gameplay</h4>
+                        <div class="space-y-3">
+                            <div>
+                                <label class="block text-sm text-text-secondary mb-2">Difficulty</label>
+                                <select class="input text-sm">
+                                    <option>Easy</option>
+                                    <option selected>Medium</option>
+                                    <option>Hard</option>
+                                </select>
+                            </div>
+                            <div class="flex items-center justify-between">
+                                <span class="text-sm text-text-secondary">Auto-save Progress</span>
+                                <label class="relative inline-flex items-center cursor-pointer">
+                                    <input type="checkbox" class="sr-only peer" checked />
+                                    <div class="w-11 h-6 bg-surface-200 peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-primary-600"></div>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mt-6 pt-6 border-t border-border">
+                    <button onclick="toggleSettings()" class="btn-primary w-full py-3 text-base font-semibold shadow-elevated hover:shadow-floating active-press">
+                        Save Settings
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Auth guard
+        if (window.STEMQUEST_AUTH && !STEMQUEST_AUTH.requireAuth()) {
+            // requireAuth will redirect; stop further execution
+        }
+        // Game State Management
+        var GAME_CONFIG = {
+            fraction:   { title: 'Fraction Adventure',   subject: 'Mathematics', level: 2, total: 8  },
+            algebra:    { title: 'Algebra Quest',        subject: 'Mathematics', level: 3, total: 12 },
+            number:     { title: 'Number Ninja',         subject: 'Mathematics', level: 1, total: 6  },
+            geometry:   { title: 'Geometry Explorer',    subject: 'Mathematics', level: 2, total: 8  },
+            calculus:   { title: 'Calculus Challenge',   subject: 'Mathematics', level: 4, total: 10 },
+            pattern:    { title: 'Pattern Master',       subject: 'Mathematics', level: 1, total: 6  },
+            statistics: { title: 'Statistics Safari',    subject: 'Mathematics', level: 3, total: 8  },
+            puzzle:     { title: 'Math Puzzle Box',      subject: 'Mathematics', level: 1, total: 6  }
+        };
+
+        // Determine the currently selected game from the URL, defaulting to algebra.
+        var params = new URLSearchParams(window.location.search);
+        var gameKey = params.get('game') || 'algebra';
+        var config = GAME_CONFIG[gameKey] || GAME_CONFIG.algebra;
+
+        var gameState = {
+            gameKey: gameKey,
+            game: config.title,
+            subject: config.subject,
+            level: config.level,
+            score: 0,
+            timeRemaining: config.total * 45, // seconds per problem
+            lives: 3,
+            currentProblem: 1,
+            totalProblems: config.total,
+            isPaused: false,
+            hintsUsed: 0,
+            maxHints: 3,
+            correctCount: 0,
+            correctAnswer: null,
+            problemType: null
+        };
+
+        var gameTimer;
+        var calculatorExpression = '';
+
+        // Initialize game
+        window.addEventListener('load', function() {
+            document.getElementById('gameTitle').textContent = config.title;
+            document.getElementById('gameSubtitle').textContent = 'Level ' + config.level + ' - ' + config.subject;
+            startGameTimer();
+            generateNewProblem();
+            updateDisplay();
+        });
+
+        // Timer Management
+        function startGameTimer() {
+            gameTimer = setInterval(function() {
+                if (!gameState.isPaused && gameState.timeRemaining > 0) {
+                    gameState.timeRemaining--;
+                    updateTimerDisplay();
+                }
+                
+                if (gameState.timeRemaining <= 0) {
+                    endGame('timeout');
+                }
+            }, 1000);
+        }
+
+        function updateTimerDisplay() {
+            const minutes = Math.floor(gameState.timeRemaining / 60);
+            const seconds = gameState.timeRemaining % 60;
+            const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
+            document.getElementById('gameTimer').textContent = timeString;
+            var mobileTimer = document.querySelector('#mobileStatsPanel span.text-warning-600');
+            if (mobileTimer) mobileTimer.textContent = timeString;
+        }
+
+        function updateDisplay() {
+            document.getElementById('gameScore').textContent = gameState.score.toLocaleString();
+            var mobileScore = document.querySelector('#mobileStatsPanel span.text-success-600');
+            if (mobileScore) mobileScore.textContent = gameState.score.toLocaleString();
+            updateTimerDisplay();
+            updateLivesDisplay();
+        }
+
+        function updateLivesDisplay() {
+            const livesDisplay = document.getElementById('livesDisplay');
+            livesDisplay.innerHTML = '';
+            
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = `w-2 h-2 rounded-full ${i < gameState.lives ? 'bg-error-600' : 'bg-error-200'}`;
+                livesDisplay.appendChild(dot);
+            }
+        }
+
+        // Game Controls
+        function pauseGame() {
+            gameState.isPaused = true;
+            document.getElementById('pauseModal').classList.remove('hidden');
+        }
+
+        function resumeGame() {
+            gameState.isPaused = false;
+            document.getElementById('pauseModal').classList.add('hidden');
+        }
+
+        function restartGame() {
+            if (confirm('Are you sure you want to restart this level? Your current progress will be lost.')) {
+                gameState = {
+                    gameKey: gameKey,
+                    game: config.title,
+                    subject: config.subject,
+                    level: config.level,
+                    score: 0,
+                    timeRemaining: config.total * 45,
+                    lives: 3,
+                    currentProblem: 1,
+                    totalProblems: config.total,
+                    isPaused: false,
+                    hintsUsed: 0,
+                    maxHints: 3,
+                    correctCount: 0,
+                    correctAnswer: null,
+                    problemType: null
+                };
+                document.getElementById('pauseModal').classList.add('hidden');
+                if (gameTimer) clearInterval(gameTimer);
+                startGameTimer();
+                updateDisplay();
+                generateNewProblem();
+            }
+        }
+
+        function exitGame() {
+            if (confirm('Are you sure you want to exit? Your progress will be saved.')) {
+                window.location.href = 'student_dashboard.html';
+            }
+        }
+
+        // Answer Checking
+        function checkAnswer() {
+            var answerInput = document.getElementById('answerInput');
+            var userAnswer = parseFloat(answerInput.value.trim());
+            var correctAnswer = gameState.correctAnswer;
+
+            var feedback = document.getElementById('answerFeedback');
+
+            if (isNaN(userAnswer)) {
+                showFeedback('Please enter a valid number.', 'error');
+                return;
+            }
+
+            var elapsedSeconds = Math.abs((Date.now() - gameState.problemStart) / 1000);
+
+            if (Math.abs(userAnswer - correctAnswer) < 0.01) {
+                // Correct answer - award points based on speed
+                var bonus = Math.max(50, 100 - Math.round(elapsedSeconds));
+                gameState.score += 100 + bonus;
+                gameState.correctCount++;
+                showFeedback('Correct! Well done! +' + (100 + bonus) + ' points', 'success');
+                showAchievement('Correct!', 'Great work solving that!');
+
+                setTimeout(() => {
+                    if (gameState.currentProblem >= gameState.totalProblems) {
+                        endGame('completed');
+                    } else {
+                        gameState.currentProblem++;
+                        generateNewProblem();
+                    }
+                }, 1200);
+            } else {
+                // Wrong answer
+                gameState.lives--;
+                showFeedback('Incorrect. The answer is ' + correctAnswer + '.', 'error');
+                showAchievement('Keep Trying!', 'Let\'s get the next one right!');
+
+                if (gameState.lives <= 0) {
+                    setTimeout(() => endGame('no_lives'), 1500);
+                } else {
+                    setTimeout(() => {
+                        gameState.currentProblem++;
+                        generateNewProblem();
+                    }, 1500);
+                }
+            }
+
+            updateDisplay();
+        }
+
+        function showFeedback(message, type) {
+            var feedback = document.getElementById('answerFeedback');
+            feedback.textContent = message;
+            feedback.className = 'mt-3 text-center text-sm font-medium ' +
+                (type === 'success' ? 'text-success-600' :
+                 type === 'error' ? 'text-error-600' : 'text-text-secondary');
+            feedback.classList.remove('hidden');
+        }
+
+        function generateNewProblem() {
+            var a, b, x, c;
+            gameState.problemType = Math.floor(Math.random() * 3);
+            gameState.problemStart = Date.now();
+
+            switch (gameState.problemType) {
+                case 0: // ax + b = c
+                    a = Math.floor(Math.random() * 9) + 2;
+                    x = Math.floor(Math.random() * 10) + 1;
+                    b = Math.floor(Math.random() * 20) + 5;
+                    c = a * x + b;
+                    gameState.correctAnswer = x;
+                    document.getElementById('mathProblem').textContent = a + 'x + ' + b + ' = ' + c;
+                    document.getElementById('problemTitle').textContent = 'Solve for x';
+                    break;
+                case 1: // ax - b = c
+                    a = Math.floor(Math.random() * 9) + 2;
+                    x = Math.floor(Math.random() * 10) + 1;
+                    b = Math.floor(Math.random() * 15) + 2;
+                    c = a * x - b;
+                    gameState.correctAnswer = x;
+                    document.getElementById('mathProblem').textContent = a + 'x - ' + b + ' = ' + c;
+                    document.getElementById('problemTitle').textContent = 'Solve for x';
+                    break;
+                default: // a + b = ?  (addition)
+                    a = Math.floor(Math.random() * 50) + 10;
+                    b = Math.floor(Math.random() * 50) + 10;
+                    gameState.correctAnswer = a + b;
+                    document.getElementById('mathProblem').textContent = a + ' + ' + b + ' = ?';
+                    document.getElementById('problemTitle').textContent = 'Find the sum';
+                    break;
+            }
+
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerFeedback').classList.add('hidden');
+            showProblemProgress();
+        }
+
+        function showProblemProgress() {
+            var pct = Math.round((gameState.currentProblem - 1) / gameState.totalProblems * 100);
+            var el = document.querySelector('#sidePanel .progress-fill');
+            if (el) el.style.width = pct + '%';
+            var label = document.querySelector('#sidePanel .text-xs.text-text-tertiary');
+            if (label) label.textContent = (gameState.currentProblem - 1) + ' of ' + gameState.totalProblems + ' problems solved';
+            var completion = document.querySelector('#sidePanel .flex.items-center.justify-between.text-sm .font-medium');
+            if (completion) completion.textContent = pct + '%';
+        }
+
+        function skipProblem() {
+            if (gameState.currentProblem < gameState.totalProblems) {
+                gameState.currentProblem++;
+                generateNewProblem();
+                updateDisplay();
+            } else {
+                endGame('completed');
+            }
+        }
+
+        function resetProblem() {
+            document.getElementById('answerInput').value = '';
+            document.getElementById('answerFeedback').classList.add('hidden');
+        }
+
+        // Hint System
+        function showHint() {
+            if (gameState.hintsUsed >= gameState.maxHints) {
+                alert('No more hints available for this level!');
+                return;
+            }
+
+            gameState.hintsUsed++;
+            var hint;
+            if (gameState.problemType === 2) {
+                hint = 'Add the two numbers together to find the sum.';
+            } else {
+                var hints = [
+                    'Start by isolating the variable term on one side.',
+                    'Subtract the constant from both sides first.',
+                    'Then divide both sides by the coefficient of x.'
+                ];
+                hint = hints[Math.min(gameState.hintsUsed - 1, hints.length - 1)];
+            }
+            alert('Hint ' + gameState.hintsUsed + ': ' + hint);
+            updateDisplay();
+        }
+
+        // Achievement System
+        function showAchievement(title, description) {
+            const notification = document.getElementById('achievementNotification');
+            document.getElementById('achievementText').textContent = description;
+            
+            notification.classList.remove('translate-x-full');
+            notification.classList.add('translate-x-0');
+            
+            setTimeout(() => {
+                hideAchievement();
+            }, 4000);
+        }
+
+        function hideAchievement() {
+            const notification = document.getElementById('achievementNotification');
+            notification.classList.remove('translate-x-0');
+            notification.classList.add('translate-x-full');
+        }
+
+        // UI Controls
+        function toggleSidePanel() {
+            const sidePanel = document.getElementById('sidePanel');
+            sidePanel.classList.toggle('hidden');
+        }
+
+        function toggleMobileStats() {
+            const panel = document.getElementById('mobileStatsPanel');
+            panel.classList.toggle('hidden');
+        }
+
+        function toggleSettings() {
+            const modal = document.getElementById('settingsModal');
+            modal.classList.toggle('hidden');
+        }
+
+        // Calculator Functions
+        function calculatorInput(value) {
+            var display = document.getElementById('calculatorDisplay');
+            if (display.textContent === '0' || display.textContent === 'Error') {
+                display.textContent = value;
+            } else {
+                display.textContent += value;
+            }
+            calculatorExpression = display.textContent;
+        }
+
+        function clearCalculator() {
+            document.getElementById('calculatorDisplay').textContent = '0';
+            calculatorExpression = '';
+        }
+
+        // Safe arithmetic evaluator (no eval) supporting + - * /
+        function safeEvaluate(expr) {
+            // Tokenize numbers and operators
+            var tokens = expr.match(/\d+(?:\.\d+)?|[+\-*/]/g);
+            if (!tokens) return NaN;
+
+            // First pass: handle * and /
+            var output = [];
+            for (var i = 0; i < tokens.length; i++) {
+                var t = tokens[i];
+                if (t === '*' || t === '/') {
+                    var left = parseFloat(output.pop());
+                    var right = parseFloat(tokens[++i]);
+                    if (isNaN(left) || isNaN(right) || (t === '/' && right === 0)) return NaN;
+                    output.push(t === '*' ? left * right : left / right);
+                } else {
+                    output.push(t);
+                }
+            }
+
+            // Second pass: handle + and -
+            var result = parseFloat(output[0]) || 0;
+            for (var j = 1; j < output.length; j += 2) {
+                var op = output[j];
+                var num = parseFloat(output[j + 1]);
+                if (isNaN(num)) return NaN;
+                if (op === '+') result += num;
+                else if (op === '-') result -= num;
+            }
+            return result;
+        }
+
+        function calculateResult() {
+            var display = document.getElementById('calculatorDisplay');
+            var result = safeEvaluate(calculatorExpression.replace('×', '*'));
+            if (isNaN(result)) {
+                display.textContent = 'Error';
+                calculatorExpression = '';
+            } else {
+                var rounded = Math.round(result * 10000) / 10000;
+                display.textContent = rounded;
+                calculatorExpression = rounded.toString();
+            }
+        }
+
+        // Game result handling - records the outcome to the data store so the
+        // dashboard, profile and progress pages all reflect real progress.
+        function endGame(reason) {
+            clearInterval(gameTimer);
+
+            var elapsedTotal = Math.round((config.total * 45 - gameState.timeRemaining));
+            var accuracy = gameState.totalProblems > 0
+                ? Math.round((gameState.correctCount / gameState.totalProblems) * 100)
+                : 0;
+
+            // Record the game result in the shared data store.
+            var newBadge = STEMQUEST_STORE.recordGameResult({
+                game: config.title,
+                subject: config.subject,
+                score: gameState.score,
+                accuracy: accuracy,
+                durationSec: Math.max(elapsedTotal, 1),
+                completed: reason === 'completed'
+            });
+
+            let message = '';
+            let goTo = 'game_selection.html';
+            switch (reason) {
+                case 'completed':
+                    message = 'Congratulations! You completed the level! You earned ' + gameState.score + ' points.';
+                    break;
+                case 'timeout':
+                    message = 'Time\'s up! Don\'t worry, you can try again.';
+                    break;
+                case 'no_lives':
+                    message = 'Game over! You made it through ' + gameState.correctCount + ' problems correctly.';
+                    break;
+            }
+
+            if (newBadge) {
+                message = message + '\n\nNew badge earned: ' + newBadge.name + '!';
+            }
+
+            setTimeout(() => {
+                alert(message);
+                window.location.href = goTo;
+            }, 1000);
+        }
+
+        // Keyboard Support
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Enter') {
+                e.preventDefault();
+                checkAnswer();
+            } else if (e.key === 'Escape') {
+                if (!document.getElementById('pauseModal').classList.contains('hidden')) {
+                    resumeGame();
+                } else {
+                    pauseGame();
+                }
+            }
+        });
+
+        // Touch Support for Mobile
+        let touchStartY = 0;
+        document.addEventListener('touchstart', function(e) {
+            touchStartY = e.touches[0].clientY;
+        });
+
+        document.addEventListener('touchend', function(e) {
+            const touchEndY = e.changedTouches[0].clientY;
+            const diff = touchStartY - touchEndY;
+            
+            // Swipe up to show side panel on mobile
+            if (diff > 50 && window.innerWidth < 1024) {
+                const sidePanel = document.getElementById('sidePanel');
+                if (sidePanel.classList.contains('hidden')) {
+                    toggleSidePanel();
+                }
+            }
+        });
+
+        // Handle page visibility change (pause when tab is hidden)
+        document.addEventListener('visibilitychange', function() {
+            if (document.hidden && !gameState.isPaused) {
+                pauseGame();
+            }
+        });
+    </script>
+</body>
+</html>

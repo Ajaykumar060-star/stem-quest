@@ -1,0 +1,813 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Student Profile - STEM Quest</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="../public/data-store.js"></script>
+<script src="../public/auth.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-background to-secondary-50">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.5"/>
+                </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid)"/>
+        </svg>
+    </div>
+
+    <!-- Header -->
+    <header class="relative z-10 bg-white/80 backdrop-blur-sm border-b border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between items-center h-16">
+                <!-- Logo and Navigation -->
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-xl font-bold text-text-primary">STEM Quest</h1>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Links -->
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="student_dashboard.html" class="text-text-secondary hover:text-primary-600 font-medium transition-colors">
+                            Dashboard
+                        </a>
+                        <a href="game_selection.html" class="text-text-secondary hover:text-primary-600 font-medium transition-colors">
+                            Games
+                        </a>
+                        <a href="progress_tracking.html" class="text-text-secondary hover:text-primary-600 font-medium transition-colors">
+                            Progress
+                        </a>
+                        <a href="student_profile.html" class="text-primary-600 font-medium border-b-2 border-primary-600 pb-4">
+                            Profile
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Right Side Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Offline Status -->
+                    <div class="flex items-center space-x-2 px-3 py-1 bg-success-50 border border-success-100 rounded-full">
+                        <div class="w-2 h-2 bg-success-600 rounded-full animate-pulse"></div>
+                        <span class="text-sm font-medium text-success-600">Offline Ready</span>
+                    </div>
+
+                    <!-- Language Selector -->
+                    <div class="relative">
+                        <select id="languageSelector" class="appearance-none bg-white border border-border rounded-lg px-3 py-2 pr-8 text-sm font-medium text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="bn">বাংলা</option>
+                            <option value="te">తెలుగు</option>
+                            <option value="ta">தமிழ்</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                            <svg class="w-4 h-4 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button class="md:hidden p-2 rounded-lg hover:bg-surface transition-colors" onclick="toggleMobileMenu()">
+                        <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div id="mobileMenu" class="hidden md:hidden py-4 border-t border-border">
+                <nav class="flex flex-col space-y-2">
+                    <a href="student_dashboard.html" class="px-3 py-2 text-text-secondary hover:text-primary-600 font-medium transition-colors rounded-lg hover:bg-surface">
+                        Dashboard
+                    </a>
+                    <a href="game_selection.html" class="px-3 py-2 text-text-secondary hover:text-primary-600 font-medium transition-colors rounded-lg hover:bg-surface">
+                        Games
+                    </a>
+                    <a href="progress_tracking.html" class="px-3 py-2 text-text-secondary hover:text-primary-600 font-medium transition-colors rounded-lg hover:bg-surface">
+                        Progress
+                    </a>
+                    <a href="student_profile.html" class="px-3 py-2 text-primary-600 font-medium bg-primary-50 rounded-lg">
+                        Profile
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <!-- Profile Overview -->
+            <div class="lg:col-span-1">
+                <div class="card p-6 text-center">
+                    <!-- Avatar Section -->
+                    <div class="relative inline-block mb-6">
+                        <div class="w-32 h-32 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-full flex items-center justify-center text-white text-4xl font-bold shadow-elevated">
+                            <img id="profileAvatar" src="https://images.pexels.com/photos/8471916/pexels-photo-8471916.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Student Avatar" class="w-full h-full object-cover rounded-full" loading="lazy" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';" />
+                            <div class="w-full h-full rounded-full bg-gradient-to-br from-primary-500 to-secondary-500 flex items-center justify-center text-white text-4xl font-bold" style="display: none;" id="avatarInitials">
+                                AS
+                            </div>
+                        </div>
+                        <button class="absolute bottom-2 right-2 w-8 h-8 bg-white border-2 border-primary-500 rounded-full flex items-center justify-center hover:bg-primary-50 transition-colors" onclick="openAvatarSelector()">
+                            <svg class="w-4 h-4 text-primary-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15.232 5.232l3.536 3.536m-2.036-5.036a2.5 2.5 0 113.536 3.536L6.5 21.036H3v-3.572L16.732 3.732z"/>
+                            </svg>
+                        </button>
+                    </div>
+
+                    <!-- Student Info -->
+                    <div class="space-y-4">
+                        <div>
+                            <h2 id="studentName" class="text-2xl font-bold text-text-primary">Student</h2>
+                            <p class="text-text-secondary" id="studentIdText">Student ID: --</p>
+                        </div>
+
+                        <div class="grid grid-cols-2 gap-4 text-center">
+                            <div class="bg-primary-50 rounded-lg p-3">
+                                <div class="text-2xl font-bold text-primary-600" id="gradeLevelDisplay">-</div>
+                                <div class="text-sm text-text-secondary">Grade Level</div>
+                            </div>
+                            <div class="bg-secondary-50 rounded-lg p-3">
+                                <div class="text-2xl font-bold text-secondary-600" id="learningLevelDisplay">1</div>
+                                <div class="text-sm text-text-secondary">Learning Level</div>
+                            </div>
+                        </div>
+
+                        <!-- Quick Stats -->
+                        <div class="space-y-3 pt-4 border-t border-border">
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Total Points</span>
+                                <span class="font-semibold text-accent-600" id="statPoints">0</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Games Completed</span>
+                                <span class="font-semibold text-text-primary" id="statGames">0</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Badges Earned</span>
+                                <span class="font-semibold text-text-primary" id="statBadges">0</span>
+                            </div>
+                            <div class="flex justify-between items-center">
+                                <span class="text-text-secondary">Days Active</span>
+                                <span class="font-semibold text-text-primary" id="statDays">0</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Learning Goals -->
+                <div class="card p-6 mt-6">
+                    <h3 class="text-lg font-semibold text-text-primary mb-4 flex items-center">
+                        <svg class="w-5 h-5 text-accent-600 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                        </svg>
+                        Current Goals
+                    </h3>
+                    <div class="space-y-4">
+                        <div class="bg-surface rounded-lg p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium text-text-primary">Complete 5 Math Games</span>
+                                <span class="text-sm text-text-secondary">3/5</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 60%"></div>
+                            </div>
+                        </div>
+                        <div class="bg-surface rounded-lg p-4">
+                            <div class="flex justify-between items-center mb-2">
+                                <span class="font-medium text-text-primary">Earn Science Badge</span>
+                                <span class="text-sm text-text-secondary">80%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profile Settings -->
+            <div class="lg:col-span-2 space-y-6">
+                <!-- Personal Information -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 flex items-center">
+                        <svg class="w-6 h-6 text-primary-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z"/>
+                        </svg>
+                        Personal Information
+                    </h3>
+
+                    <form class="grid grid-cols-1 md:grid-cols-2 gap-6" id="personalInfoForm">
+                        <div>
+                            <label for="displayName" class="block text-sm font-medium text-text-primary mb-2">
+                                Display Name
+                            </label>
+                            <input type="text" id="displayName" name="displayName" value="" class="input" placeholder="Enter your display name" />
+                        </div>
+
+                        <div>
+                            <label for="gradeLevel" class="block text-sm font-medium text-text-primary mb-2">
+                                Grade Level
+                            </label>
+                            <select id="gradeLevel" name="gradeLevel" class="input">
+                                <option value="6">Grade 6</option>
+                                <option value="7">Grade 7</option>
+                                <option value="8">Grade 8</option>
+                                <option value="9">Grade 9</option>
+                                <option value="10">Grade 10</option>
+                                <option value="11">Grade 11</option>
+                                <option value="12">Grade 12</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="preferredLanguage" class="block text-sm font-medium text-text-primary mb-2">
+                                Preferred Language
+                            </label>
+                            <select id="preferredLanguage" name="preferredLanguage" class="input">
+                                <option value="en" selected>English</option>
+                                <option value="hi">हिंदी (Hindi)</option>
+                                <option value="bn">বাংলা (Bengali)</option>
+                                <option value="te">తెలుగు (Telugu)</option>
+                                <option value="ta">தமிழ் (Tamil)</option>
+                            </select>
+                        </div>
+
+                        <div>
+                            <label for="schoolName" class="block text-sm font-medium text-text-primary mb-2">
+                                School Name
+                            </label>
+                            <input type="text" id="schoolName" name="schoolName" value="" class="input" placeholder="Enter your school name" />
+                        </div>
+
+                        <div class="md:col-span-2">
+                            <button type="submit" class="btn-primary px-6 py-2">
+                                <span class="flex items-center space-x-2">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                    </svg>
+                                    <span>Save Changes</span>
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Learning Preferences -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 flex items-center">
+                        <svg class="w-6 h-6 text-secondary-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6V4m0 2a2 2 0 100 4m0-4a2 2 0 110 4m-6 8a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4m6 6v10m6-2a2 2 0 100-4m0 4a2 2 0 100 4m0-4v2m0-6V4"/>
+                        </svg>
+                        Learning Preferences
+                    </h3>
+
+                    <div class="space-y-6">
+                        <!-- Difficulty Progression -->
+                        <div>
+                            <label class="block text-sm font-medium text-text-primary mb-3">
+                                Difficulty Progression
+                            </label>
+                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-3">
+                                <label class="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-surface transition-colors">
+                                    <input type="radio" name="difficulty" value="gradual" checked class="mr-3 text-primary-600" />
+                                    <div>
+                                        <div class="font-medium text-text-primary">Gradual</div>
+                                        <div class="text-sm text-text-secondary">Step by step</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-surface transition-colors">
+                                    <input type="radio" name="difficulty" value="adaptive" class="mr-3 text-primary-600" />
+                                    <div>
+                                        <div class="font-medium text-text-primary">Adaptive</div>
+                                        <div class="text-sm text-text-secondary">AI-powered</div>
+                                    </div>
+                                </label>
+                                <label class="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-surface transition-colors">
+                                    <input type="radio" name="difficulty" value="challenge" class="mr-3 text-primary-600" />
+                                    <div>
+                                        <div class="font-medium text-text-primary">Challenge</div>
+                                        <div class="text-sm text-text-secondary">Fast-paced</div>
+                                    </div>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Subject Interests -->
+                        <div>
+                            <label class="block text-sm font-medium text-text-primary mb-3">
+                                Subject Interests
+                            </label>
+                            <div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+                                <label class="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-surface transition-colors">
+                                    <input type="checkbox" checked class="mr-3 text-primary-600" />
+                                    <span class="font-medium text-text-primary">Mathematics</span>
+                                </label>
+                                <label class="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-surface transition-colors">
+                                    <input type="checkbox" checked class="mr-3 text-primary-600" />
+                                    <span class="font-medium text-text-primary">Science</span>
+                                </label>
+                                <label class="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-surface transition-colors">
+                                    <input type="checkbox" class="mr-3 text-primary-600" />
+                                    <span class="font-medium text-text-primary">Technology</span>
+                                </label>
+                                <label class="flex items-center p-3 border border-border rounded-lg cursor-pointer hover:bg-surface transition-colors">
+                                    <input type="checkbox" checked class="mr-3 text-primary-600" />
+                                    <span class="font-medium text-text-primary">Engineering</span>
+                                </label>
+                            </div>
+                        </div>
+
+                        <!-- Notification Settings -->
+                        <div>
+                            <label class="block text-sm font-medium text-text-primary mb-3">
+                                Notification Preferences
+                            </label>
+                            <div class="space-y-3">
+                                <label class="flex items-center justify-between p-3 border border-border rounded-lg">
+                                    <div>
+                                        <div class="font-medium text-text-primary">Daily Learning Reminders</div>
+                                        <div class="text-sm text-text-secondary">Get reminded to continue learning</div>
+                                    </div>
+                                    <input type="checkbox" checked class="text-primary-600" />
+                                </label>
+                                <label class="flex items-center justify-between p-3 border border-border rounded-lg">
+                                    <div>
+                                        <div class="font-medium text-text-primary">Achievement Notifications</div>
+                                        <div class="text-sm text-text-secondary">Celebrate your progress</div>
+                                    </div>
+                                    <input type="checkbox" checked class="text-primary-600" />
+                                </label>
+                                <label class="flex items-center justify-between p-3 border border-border rounded-lg">
+                                    <div>
+                                        <div class="font-medium text-text-primary">Weekly Progress Reports</div>
+                                        <div class="text-sm text-text-secondary">Summary of your learning</div>
+                                    </div>
+                                    <input type="checkbox" class="text-primary-600" />
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Achievements Showcase -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 flex items-center">
+                        <svg class="w-6 h-6 text-accent-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                        </svg>
+                        Achievements & Badges
+                    </h3>
+
+                    <div class="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+                        <!-- Earned Badges -->
+                        <div class="text-center p-4 bg-accent-50 border border-accent-100 rounded-lg">
+                            <div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-accent-400 to-accent-600 rounded-full flex items-center justify-center">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-text-primary text-sm">Math Explorer</h4>
+                            <p class="text-xs text-text-secondary mt-1">Completed 10 math games</p>
+                        </div>
+
+                        <div class="text-center p-4 bg-secondary-50 border border-secondary-100 rounded-lg">
+                            <div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-full flex items-center justify-center">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 7.172V5L8 4z"/>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-text-primary text-sm">Science Star</h4>
+                            <p class="text-xs text-text-secondary mt-1">Mastered 5 experiments</p>
+                        </div>
+
+                        <div class="text-center p-4 bg-primary-50 border border-primary-100 rounded-lg">
+                            <div class="w-16 h-16 mx-auto mb-3 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center">
+                                <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-text-primary text-sm">Quick Learner</h4>
+                            <p class="text-xs text-text-secondary mt-1">7-day learning streak</p>
+                        </div>
+
+                        <!-- Locked Badge -->
+                        <div class="text-center p-4 bg-surface border border-border rounded-lg opacity-60">
+                            <div class="w-16 h-16 mx-auto mb-3 bg-surface-200 rounded-full flex items-center justify-center">
+                                <svg class="w-8 h-8 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                            </div>
+                            <h4 class="font-semibold text-text-secondary text-sm">Tech Master</h4>
+                            <p class="text-xs text-text-tertiary mt-1">Complete 15 tech games</p>
+                        </div>
+                    </div>
+
+                    <!-- Recent Certificates -->
+                    <div class="mt-6 pt-6 border-t border-border">
+                        <h4 class="font-semibold text-text-primary mb-4">Recent Certificates</h4>
+                        <div class="space-y-3">
+                            <div class="flex items-center p-3 bg-surface rounded-lg">
+                                <div class="w-12 h-12 bg-gradient-to-br from-accent-400 to-accent-600 rounded-lg flex items-center justify-center mr-4">
+                                    <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4M7.835 4.697a3.42 3.42 0 001.946-.806 3.42 3.42 0 014.438 0 3.42 3.42 0 001.946.806 3.42 3.42 0 013.138 3.138 3.42 3.42 0 00.806 1.946 3.42 3.42 0 010 4.438 3.42 3.42 0 00-.806 1.946 3.42 3.42 0 01-3.138 3.138 3.42 3.42 0 00-1.946.806 3.42 3.42 0 01-4.438 0 3.42 3.42 0 00-1.946-.806 3.42 3.42 0 01-3.138-3.138 3.42 3.42 0 00-.806-1.946 3.42 3.42 0 010-4.438 3.42 3.42 0 00.806-1.946 3.42 3.42 0 013.138-3.138z"/>
+                                    </svg>
+                                </div>
+                                <div class="flex-1">
+                                    <h5 class="font-medium text-text-primary">Algebra Fundamentals</h5>
+                                    <p class="text-sm text-text-secondary">Earned on Dec 15, 2025</p>
+                                </div>
+                                <button class="btn-outline text-sm px-3 py-1">
+                                    View
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Account Security -->
+                <div class="card p-6">
+                    <h3 class="text-xl font-semibold text-text-primary mb-6 flex items-center">
+                        <svg class="w-6 h-6 text-error-600 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m5.618-4.016A11.955 11.955 0 0112 2.944a11.955 11.955 0 01-8.618 3.04A12.02 12.02 0 003 9c0 5.591 3.824 10.29 9 11.622 5.176-1.332 9-6.03 9-11.622 0-1.042-.133-2.052-.382-3.016z"/>
+                        </svg>
+                        Account Security
+                    </h3>
+
+                    <div class="space-y-4">
+                        <div class="flex items-center justify-between p-4 border border-border rounded-lg">
+                            <div>
+                                <h4 class="font-medium text-text-primary">Change Password</h4>
+                                <p class="text-sm text-text-secondary">Update your account password</p>
+                            </div>
+                            <button class="btn-outline" onclick="openPasswordModal()">
+                                Change
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border border-border rounded-lg">
+                            <div>
+                                <h4 class="font-medium text-text-primary">Trusted Devices</h4>
+                                <p class="text-sm text-text-secondary">Manage devices that can access your account</p>
+                            </div>
+                            <button class="btn-outline">
+                                Manage
+                            </button>
+                        </div>
+
+                        <div class="flex items-center justify-between p-4 border border-border rounded-lg">
+                            <div>
+                                <h4 class="font-medium text-text-primary">Data Export</h4>
+                                <p class="text-sm text-text-secondary">Download your learning data</p>
+                            </div>
+                            <button class="btn-outline">
+                                Export
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Avatar Selector Modal -->
+    <div id="avatarModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold text-text-primary">Choose Avatar</h3>
+                <button onclick="closeAvatarSelector()" class="text-text-tertiary hover:text-text-primary">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <div class="grid grid-cols-3 gap-4 mb-6">
+                <button class="avatar-option w-20 h-20 rounded-full bg-gradient-to-br from-primary-400 to-primary-600 flex items-center justify-center text-white text-2xl font-bold hover:scale-105 transition-transform" data-avatar="AS">
+                    AS
+                </button>
+                <button class="avatar-option w-20 h-20 rounded-full overflow-hidden hover:scale-105 transition-transform" data-avatar="https://images.pixabay.com/photos/2016/08/08/09/17/avatar-1577909_960_720.png">
+                    <img src="https://images.pixabay.com/photos/2016/08/08/09/17/avatar-1577909_960_720.png" alt="Avatar" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                </button>
+                <button class="avatar-option w-20 h-20 rounded-full overflow-hidden hover:scale-105 transition-transform" data-avatar="https://images.pexels.com/photos/8471916/pexels-photo-8471916.jpeg?auto=compress&cs=tinysrgb&w=400">
+                    <img src="https://images.pexels.com/photos/8471916/pexels-photo-8471916.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Avatar" class="w-full h-full object-cover" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                </button>
+            </div>
+
+            <div class="flex justify-end space-x-3">
+                <button onclick="closeAvatarSelector()" class="btn-outline">
+                    Cancel
+                </button>
+                <button onclick="saveAvatar()" class="btn-primary">
+                    Save Avatar
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Password Change Modal -->
+    <div id="passwordModal" class="fixed inset-0 bg-black bg-opacity-50 z-50 hidden flex items-center justify-center p-4">
+        <div class="bg-white rounded-lg max-w-md w-full p-6">
+            <div class="flex justify-between items-center mb-6">
+                <h3 class="text-lg font-semibold text-text-primary">Change Password</h3>
+                <button onclick="closePasswordModal()" class="text-text-tertiary hover:text-text-primary">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>
+                    </svg>
+                </button>
+            </div>
+
+            <form class="space-y-4" id="passwordForm">
+                <div>
+                    <label for="currentPassword" class="block text-sm font-medium text-text-primary mb-2">
+                        Current Password
+                    </label>
+                    <input type="password" id="currentPassword" name="currentPassword" class="input" required />
+                </div>
+
+                <div>
+                    <label for="newPassword" class="block text-sm font-medium text-text-primary mb-2">
+                        New Password
+                    </label>
+                    <input type="password" id="newPassword" name="newPassword" class="input" required />
+                </div>
+
+                <div>
+                    <label for="confirmPassword" class="block text-sm font-medium text-text-primary mb-2">
+                        Confirm New Password
+                    </label>
+                    <input type="password" id="confirmPassword" name="confirmPassword" class="input" required />
+                </div>
+
+                <div class="flex justify-end space-x-3 pt-4">
+                    <button type="button" onclick="closePasswordModal()" class="btn-outline">
+                        Cancel
+                    </button>
+                    <button type="submit" class="btn-primary">
+                        Update Password
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // Auth guard
+        if (window.STEMQUEST_AUTH && !STEMQUEST_AUTH.requireAuth()) {
+            // requireAuth will redirect; stop further execution
+        }
+        let selectedAvatar = null;
+
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Avatar selector functions
+        function openAvatarSelector() {
+            document.getElementById('avatarModal').classList.remove('hidden');
+        }
+
+        function closeAvatarSelector() {
+            document.getElementById('avatarModal').classList.add('hidden');
+            selectedAvatar = null;
+        }
+
+        function saveAvatar() {
+            if (selectedAvatar) {
+                const profileAvatar = document.getElementById('profileAvatar');
+                if (selectedAvatar.startsWith('http')) {
+                    profileAvatar.src = selectedAvatar;
+                    profileAvatar.style.display = 'block';
+                    profileAvatar.nextElementSibling.style.display = 'none';
+                } else {
+                    profileAvatar.style.display = 'none';
+                    profileAvatar.nextElementSibling.style.display = 'flex';
+                    profileAvatar.nextElementSibling.textContent = selectedAvatar;
+                }
+                
+                // Save to data store
+                STEMQUEST_STORE.setAvatar(selectedAvatar);
+                closeAvatarSelector();
+            }
+        }
+
+        // Password modal functions
+        function openPasswordModal() {
+            document.getElementById('passwordModal').classList.remove('hidden');
+        }
+
+        function closePasswordModal() {
+            document.getElementById('passwordModal').classList.add('hidden');
+            document.getElementById('passwordForm').reset();
+        }
+
+        // Event listeners
+        document.addEventListener('DOMContentLoaded', function() {
+            // Avatar selection
+            document.querySelectorAll('.avatar-option').forEach(option => {
+                option.addEventListener('click', function() {
+                    // Remove previous selection
+                    document.querySelectorAll('.avatar-option').forEach(opt => {
+                        opt.classList.remove('ring-4', 'ring-primary-500');
+                    });
+                    
+                    // Add selection to clicked option
+                    this.classList.add('ring-4', 'ring-primary-500');
+                    selectedAvatar = this.dataset.avatar;
+                });
+            });
+
+            // Personal info form
+            document.getElementById('personalInfoForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = new FormData(this);
+                const data = Object.fromEntries(formData);
+                
+                // Save to data store
+                STEMQUEST_STORE.updateProfile({
+                    displayName: data.displayName,
+                    grade: data.gradeLevel,
+                    school: data.schoolName,
+                    language: data.preferredLanguage
+                });
+                
+                // Update display name
+                document.getElementById('studentName').textContent = data.displayName;
+                updateAvatarInitials(data.displayName);
+                
+                // Show success message
+                showNotification('Profile updated successfully!', 'success');
+            });
+
+            // Password form
+            document.getElementById('passwordForm').addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const currentPassword = document.getElementById('currentPassword').value;
+                const newPassword = document.getElementById('newPassword').value;
+                const confirmPassword = document.getElementById('confirmPassword').value;
+                
+                // Basic validation
+                if (newPassword !== confirmPassword) {
+                    showNotification('New passwords do not match!', 'error');
+                    return;
+                }
+                
+                if (newPassword.length < 6) {
+                    showNotification('Password must be at least 6 characters long!', 'error');
+                    return;
+                }
+                
+                const result = STEMQUEST_STORE.changePassword(currentPassword, newPassword);
+                if (result.ok) {
+                    showNotification('Password updated successfully!', 'success');
+                    closePasswordModal();
+                } else {
+                    showNotification(result.error, 'error');
+                }
+            });
+
+            // Language selector
+            document.getElementById('languageSelector').addEventListener('change', function(e) {
+                const selectedLang = e.target.value;
+                STEMQUEST_STORE.updateProfile({ language: selectedLang });
+                
+                // Update preferred language in form
+                document.getElementById('preferredLanguage').value = selectedLang;
+                
+                showNotification('Language preference updated!', 'success');
+            });
+
+            // Load saved data
+            loadSavedData();
+        });
+
+        function loadSavedData() {
+            const user = STEMQUEST_STORE.currentUser();
+            if (!user) return;
+
+            const displayName = user.displayName || user.username;
+
+            // Update header name, ID, grade, stats
+            document.getElementById('studentName').textContent = displayName;
+            document.getElementById('studentIdText').textContent = 'Student ID: ' + user.studentId;
+            document.getElementById('gradeLevelDisplay').textContent = user.grade;
+            document.getElementById('learningLevelDisplay').textContent = '1';
+            document.getElementById('statPoints').textContent = (user.stats.points || 0).toLocaleString();
+            document.getElementById('statGames').textContent = user.stats.gamesCompleted || 0;
+            document.getElementById('statBadges').textContent = user.badges ? user.badges.length : 0;
+            document.getElementById('statDays').textContent = user.stats.daysActive || 1;
+
+            // Update form fields
+            document.getElementById('displayName').value = displayName;
+            document.getElementById('gradeLevel').value = String(user.grade || 8);
+            document.getElementById('schoolName').value = user.school || '';
+            document.getElementById('preferredLanguage').value = user.language || 'en';
+
+            // Update avatar initials
+            updateAvatarInitials(displayName);
+
+            // Set difficulty preference radio
+            if (user.preferences) {
+                const diff = user.preferences.difficulty;
+                document.querySelectorAll('input[name="difficulty"]').forEach(function (r) {
+                    r.checked = (r.value === diff);
+                });
+            }
+
+            // Load saved avatar
+            const savedAvatar = user.avatar;
+            if (savedAvatar) {
+                const profileAvatar = document.getElementById('profileAvatar');
+                if (savedAvatar.startsWith('http')) {
+                    profileAvatar.src = savedAvatar;
+                    profileAvatar.style.display = 'block';
+                    profileAvatar.nextElementSibling.style.display = 'none';
+                } else {
+                    profileAvatar.style.display = 'none';
+                    profileAvatar.nextElementSibling.style.display = 'flex';
+                    profileAvatar.nextElementSibling.textContent = savedAvatar;
+                }
+            }
+
+            // Load saved language
+            const savedLang = user.language || localStorage.getItem('stemquest_language');
+            if (savedLang) {
+                document.getElementById('languageSelector').value = savedLang;
+                document.getElementById('preferredLanguage').value = savedLang;
+            }
+        }
+
+        function updateAvatarInitials(name) {
+            const initials = name.trim().split(/\s+/).map(function (w) { return w[0]; }).slice(0, 2).join('').toUpperCase() || 'S';
+            document.getElementById('avatarInitials').textContent = initials;
+        }
+
+        function showNotification(message, type = 'success') {
+            // Create notification element
+            const notification = document.createElement('div');
+            notification.className = `fixed top-4 right-4 z-50 px-6 py-3 rounded-lg shadow-elevated transition-all duration-300 transform translate-x-full ${
+                type === 'success' ? 'bg-success-50 text-success-600 border border-success-100' :
+                type === 'error' ? 'bg-error-50 text-error-600 border border-error-100' :
+                'bg-primary-50 text-primary-600 border border-primary-100'
+            }`;
+            
+            notification.innerHTML = `
+                <div class="flex items-center space-x-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        ${type === 'success' ? 
+                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>' :
+                            '<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/>'
+                        }
+                    </svg>
+                    <span class="font-medium">${message}</span>
+                </div>
+            `;
+            
+            document.body.appendChild(notification);
+            
+            // Animate in
+            setTimeout(() => {
+                notification.classList.remove('translate-x-full');
+            }, 100);
+            
+            // Remove after 3 seconds
+            setTimeout(() => {
+                notification.classList.add('translate-x-full');
+                setTimeout(() => {
+                    document.body.removeChild(notification);
+                }, 300);
+            }, 3000);
+        }
+
+        // Close modals when clicking outside
+        document.addEventListener('click', function(e) {
+            if (e.target.id === 'avatarModal') {
+                closeAvatarSelector();
+            }
+            if (e.target.id === 'passwordModal') {
+                closePasswordModal();
+            }
+        });
+    </script>
+</body>
+</html>

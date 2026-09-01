@@ -1,0 +1,759 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Game Selection - STEM Quest</title>
+    <link rel="stylesheet" href="../css/main.css" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<script src="../public/data-store.js"></script>
+<script src="../public/auth.js"></script>
+</head>
+<body class="min-h-screen bg-gradient-to-br from-primary-50 via-background to-secondary-50">
+    <!-- Background Pattern -->
+    <div class="absolute inset-0 opacity-5">
+        <svg class="w-full h-full" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+            <defs>
+                <pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse">
+                    <path d="M 10 0 L 0 0 0 10" fill="none" stroke="currentColor" stroke-width="0.5"/>
+                </pattern>
+            </defs>
+            <rect width="100" height="100" fill="url(#grid)"/>
+        </svg>
+    </div>
+
+    <!-- Header -->
+    <header class="relative z-10 bg-white/80 backdrop-blur-sm border-b border-border">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex items-center justify-between h-16">
+                <!-- Logo and Navigation -->
+                <div class="flex items-center space-x-8">
+                    <div class="flex items-center space-x-3">
+                        <div class="w-10 h-10 bg-gradient-to-br from-primary-600 to-secondary-600 rounded-lg flex items-center justify-center">
+                            <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"/>
+                            </svg>
+                        </div>
+                        <div>
+                            <h1 class="text-lg font-bold text-text-primary">STEM Quest</h1>
+                        </div>
+                    </div>
+
+                    <!-- Navigation Links -->
+                    <nav class="hidden md:flex space-x-6">
+                        <a href="student_dashboard.html" class="text-text-secondary hover:text-primary-600 transition-colors font-medium">
+                            Dashboard
+                        </a>
+                        <a href="progress_tracking.html" class="text-text-secondary hover:text-primary-600 transition-colors font-medium">
+                            Progress
+                        </a>
+                        <a href="student_profile.html" class="text-text-secondary hover:text-primary-600 transition-colors font-medium">
+                            Profile
+                        </a>
+                    </nav>
+                </div>
+
+                <!-- Right Side Actions -->
+                <div class="flex items-center space-x-4">
+                    <!-- Offline Status -->
+                    <div class="flex items-center space-x-2 px-3 py-1 bg-success-50 border border-success-100 rounded-full">
+                        <div class="w-2 h-2 bg-success-600 rounded-full animate-pulse"></div>
+                        <span class="text-sm font-medium text-success-600">Offline Ready</span>
+                    </div>
+
+                    <!-- Language Selector -->
+                    <div class="relative">
+                        <select class="appearance-none bg-white border border-border rounded-lg px-3 py-2 pr-8 text-sm font-medium text-text-primary focus:ring-2 focus:ring-primary-500 focus:border-primary-500 transition-all duration-200">
+                            <option value="en">English</option>
+                            <option value="hi">हिंदी</option>
+                            <option value="bn">বাংলা</option>
+                            <option value="te">తెలుగు</option>
+                            <option value="ta">தமிழ்</option>
+                        </select>
+                        <div class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none">
+                            <svg class="w-4 h-4 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </div>
+                    </div>
+
+                    <!-- Mobile Menu Button -->
+                    <button class="md:hidden p-2 rounded-lg hover:bg-surface transition-colors" onclick="toggleMobileMenu()">
+                        <svg class="w-6 h-6 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Mobile Navigation -->
+            <div class="md:hidden hidden" id="mobileMenu">
+                <div class="px-2 pt-2 pb-3 space-y-1 border-t border-border">
+                    <a href="student_dashboard.html" class="block px-3 py-2 text-text-secondary hover:text-primary-600 transition-colors font-medium">
+                        Dashboard
+                    </a>
+                    <a href="progress_tracking.html" class="block px-3 py-2 text-text-secondary hover:text-primary-600 transition-colors font-medium">
+                        Progress
+                    </a>
+                    <a href="student_profile.html" class="block px-3 py-2 text-text-secondary hover:text-primary-600 transition-colors font-medium">
+                        Profile
+                    </a>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        <!-- Breadcrumb Navigation -->
+        <nav class="flex items-center space-x-2 text-sm text-text-secondary mb-6">
+            <a href="student_dashboard.html" class="hover:text-primary-600 transition-colors">Dashboard</a>
+            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+            </svg>
+            <span class="text-text-primary font-medium">Mathematics Games</span>
+        </nav>
+
+        <!-- Page Header -->
+        <div class="mb-8">
+            <div class="flex items-center space-x-4 mb-4">
+                <div class="w-16 h-16 bg-gradient-to-br from-primary-500 to-secondary-500 rounded-2xl flex items-center justify-center">
+                    <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"/>
+                    </svg>
+                </div>
+                <div>
+                    <h1 class="text-3xl font-bold text-text-primary">Mathematics Games</h1>
+                    <p class="text-text-secondary">Choose a game to start your mathematical adventure</p>
+                </div>
+            </div>
+
+            <!-- Stats Overview -->
+            <div class="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div class="card p-4 text-center">
+                    <div class="text-2xl font-bold text-primary-600" id="statAvailableGames">12</div>
+                    <div class="text-sm text-text-secondary">Available Games</div>
+                </div>
+                <div class="card p-4 text-center">
+                    <div class="text-2xl font-bold text-secondary-600" id="statCompletedGames">0</div>
+                    <div class="text-sm text-text-secondary">Completed</div>
+                </div>
+                <div class="card p-4 text-center">
+                    <div class="text-2xl font-bold text-accent-600" id="statGamePoints">0</div>
+                    <div class="text-sm text-text-secondary">Points Earned</div>
+                </div>
+                <div class="card p-4 text-center">
+                    <div class="text-2xl font-bold text-text-primary" id="statGameBadges">0</div>
+                    <div class="text-sm text-text-secondary">Badges Won</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Filter Controls -->
+        <div class="card p-6 mb-8">
+            <div class="flex flex-col lg:flex-row lg:items-center lg:justify-between space-y-4 lg:space-y-0">
+                <div class="flex flex-col sm:flex-row sm:items-center space-y-4 sm:space-y-0 sm:space-x-4">
+                    <!-- Search -->
+                    <div class="relative">
+                        <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                            <svg class="w-5 h-5 text-text-tertiary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                            </svg>
+                        </div>
+                        <input type="text" placeholder="Search games..." class="input pl-10 w-full sm:w-64" id="searchInput" />
+                    </div>
+
+                    <!-- Difficulty Filter -->
+                    <select class="input w-full sm:w-auto" id="difficultyFilter">
+                        <option value>All Difficulties</option>
+                        <option value="beginner">Beginner</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced</option>
+                    </select>
+
+                    <!-- Duration Filter -->
+                    <select class="input w-full sm:w-auto" id="durationFilter">
+                        <option value>All Durations</option>
+                        <option value="short">Short (5-10 min)</option>
+                        <option value="medium">Medium (10-20 min)</option>
+                        <option value="long">Long (20+ min)</option>
+                    </select>
+                </div>
+
+                <div class="flex items-center space-x-4">
+                    <!-- Status Filter -->
+                    <select class="input w-full sm:w-auto" id="statusFilter">
+                        <option value>All Games</option>
+                        <option value="completed">Completed</option>
+                        <option value="in-progress">In Progress</option>
+                        <option value="not-started">Not Started</option>
+                    </select>
+
+                    <!-- Reset Filters -->
+                    <button class="btn-outline px-4 py-2" onclick="resetFilters()">
+                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/>
+                        </svg>
+                        Reset
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Featured Games Section -->
+        <section class="mb-8">
+            <h2 class="text-xl font-bold text-text-primary mb-4 flex items-center">
+                <svg class="w-5 h-5 text-accent-500 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11.049 2.927c.3-.921 1.603-.921 1.902 0l1.519 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                </svg>
+                Recommended for You
+            </h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Featured Game Card 1 -->
+                <div class="card overflow-hidden hover:shadow-elevated transition-all duration-200 hover-lift">
+                    <div class="relative">
+                        <img src="https://images.pexels.com/photos/3862132/pexels-photo-3862132.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Fraction Adventure" class="w-full h-48 object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-3 left-3">
+                            <span class="px-2 py-1 bg-accent-500 text-white text-xs font-medium rounded-full">Featured</span>
+                        </div>
+                        <div class="absolute top-3 right-3">
+                            <div class="w-8 h-8 bg-success-500 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-bold text-text-primary">Fraction Adventure</h3>
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-4 h-4 text-accent-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                                </svg>
+                                <span class="text-sm font-medium text-text-secondary">4.8</span>
+                            </div>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-4">Master fractions through exciting adventures and visual puzzles.</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>15 min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>Intermediate</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1 text-sm text-success-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Completed</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-text-secondary">Progress</span>
+                                <span class="text-text-primary font-medium">100%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-2">
+                            <a href="game_interface.html?game=fraction" class="btn-primary flex-1 text-center py-2">
+                                Play Again
+                            </a>
+                            <button class="btn-outline px-3 py-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Featured Game Card 2 -->
+                <div class="card overflow-hidden hover:shadow-elevated transition-all duration-200 hover-lift">
+                    <div class="relative">
+                        <img src="https://images.pixabay.com/photo/2016/11/19/14/00/code-1839406_960_720.jpg?auto=compress&cs=tinysrgb&w=400" alt="Algebra Quest" class="w-full h-48 object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-3 left-3">
+                            <span class="px-2 py-1 bg-primary-500 text-white text-xs font-medium rounded-full">New</span>
+                        </div>
+                        <div class="absolute top-3 right-3">
+                            <div class="w-8 h-8 bg-white/80 backdrop-blur-sm rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-text-primary" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <div class="flex items-center justify-between mb-2">
+                            <h3 class="text-lg font-bold text-text-primary">Algebra Quest</h3>
+                            <div class="flex items-center space-x-1">
+                                <svg class="w-4 h-4 text-accent-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.518 4.674a1 1 0 00.95.69h4.915c.969 0 1.371 1.24.588 1.81l-3.976 2.888a1 1 0 00-.363 1.118l1.518 4.674c.3.922-.755 1.688-1.538 1.118l-3.976-2.888a1 1 0 00-1.176 0l-3.976 2.888c-.783.57-1.838-.197-1.538-1.118l1.518-4.674a1 1 0 00-.363-1.118l-3.976-2.888c-.784-.57-.38-1.81.588-1.81h4.914a1 1 0 00.951-.69l1.519-4.674z"/>
+                                </svg>
+                                <span class="text-sm font-medium text-text-secondary">4.9</span>
+                            </div>
+                        </div>
+                        <p class="text-text-secondary text-sm mb-4">Solve algebraic equations in an epic fantasy adventure.</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>20 min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>Advanced</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1 text-sm text-warning-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>In Progress</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="flex items-center justify-between text-sm mb-1">
+                                <span class="text-text-secondary">Progress</span>
+                                <span class="text-text-primary font-medium">65%</span>
+                            </div>
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 65%"></div>
+                            </div>
+                        </div>
+
+                        <div class="flex space-x-2">
+                            <a href="game_interface.html?game=algebra" class="btn-primary flex-1 text-center py-2">
+                                Continue
+                            </a>
+                            <button class="btn-outline px-3 py-2">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8.684 13.342C8.886 12.938 9 12.482 9 12c0-.482-.114-.938-.316-1.342m0 2.684a3 3 0 110-2.684m0 2.684l6.632 3.316m-6.632-6l6.632-3.316m0 0a3 3 0 105.367-2.684 3 3 0 00-5.367 2.684zm0 9.316a3 3 0 105.367 2.684 3 3 0 00-5.367-2.684z"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- All Games Section -->
+        <section>
+            <h2 class="text-xl font-bold text-text-primary mb-6">All Mathematics Games</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="gamesGrid">
+                <!-- Game Card 1 -->
+                <div class="card overflow-hidden hover:shadow-elevated transition-all duration-200 hover-lift game-card" data-difficulty="beginner" data-duration="short" data-status="not-started">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=compress&cs=tinysrgb&w=400" alt="Number Ninja" class="w-full h-48 object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-3 right-3">
+                            <div class="w-8 h-8 bg-success-50 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-success-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-text-primary mb-2">Number Ninja</h3>
+                        <p class="text-text-secondary text-sm mb-4">Practice basic arithmetic with fun ninja-themed challenges.</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>8 min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>Beginner</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="game_interface.html?game=number" class="btn-primary w-full text-center py-2">
+                            Start Game
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Game Card 2 -->
+                <div class="card overflow-hidden hover:shadow-elevated transition-all duration-200 hover-lift game-card" data-difficulty="intermediate" data-duration="medium" data-status="completed">
+                    <div class="relative">
+                        <img src="https://images.pexels.com/photos/3862132/pexels-photo-3862132.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Geometry Explorer" class="w-full h-48 object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-3 right-3">
+                            <div class="w-8 h-8 bg-success-500 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-text-primary mb-2">Geometry Explorer</h3>
+                        <p class="text-text-secondary text-sm mb-4">Discover shapes and angles in an interactive world.</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>12 min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>Intermediate</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1 text-sm text-success-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Completed</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+
+                        <a href="game_interface.html?game=geometry" class="btn-secondary w-full text-center py-2">
+                            Play Again
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Game Card 3 -->
+                <div class="card overflow-hidden hover:shadow-elevated transition-all duration-200 hover-lift game-card" data-difficulty="advanced" data-duration="long" data-status="in-progress">
+                    <div class="relative">
+                        <img src="https://images.pixabay.com/photo/2018/05/18/15/30/web-design-3411373_960_720.jpg?auto=compress&cs=tinysrgb&w=400" alt="Calculus Challenge" class="w-full h-48 object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-3 right-3">
+                            <div class="w-8 h-8 bg-warning-500 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-text-primary mb-2">Calculus Challenge</h3>
+                        <p class="text-text-secondary text-sm mb-4">Master derivatives and integrals through problem-solving.</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>25 min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>Advanced</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1 text-sm text-warning-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>In Progress</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 40%"></div>
+                            </div>
+                        </div>
+
+                        <a href="game_interface.html?game=calculus" class="btn-primary w-full text-center py-2">
+                            Continue
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Additional Game Cards -->
+                <div class="card overflow-hidden hover:shadow-elevated transition-all duration-200 hover-lift game-card" data-difficulty="beginner" data-duration="short" data-status="not-started">
+                    <div class="relative">
+                        <img src="https://images.unsplash.com/photo-1596495578065-6e0763fa1178?auto=compress&cs=tinysrgb&w=400" alt="Pattern Master" class="w-full h-48 object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-text-primary mb-2">Pattern Master</h3>
+                        <p class="text-text-secondary text-sm mb-4">Identify and complete mathematical patterns and sequences.</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>10 min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>Beginner</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="game_interface.html?game=pattern" class="btn-primary w-full text-center py-2">
+                            Start Game
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card overflow-hidden hover:shadow-elevated transition-all duration-200 hover-lift game-card" data-difficulty="intermediate" data-duration="medium" data-status="not-started">
+                    <div class="relative">
+                        <img src="https://images.pexels.com/photos/3862132/pexels-photo-3862132.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Statistics Safari" class="w-full h-48 object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-text-primary mb-2">Statistics Safari</h3>
+                        <p class="text-text-secondary text-sm mb-4">Explore data analysis and probability in the wild.</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>18 min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>Intermediate</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <a href="game_interface.html?game=statistics" class="btn-primary w-full text-center py-2">
+                            Start Game
+                        </a>
+                    </div>
+                </div>
+
+                <div class="card overflow-hidden hover:shadow-elevated transition-all duration-200 hover-lift game-card" data-difficulty="beginner" data-duration="short" data-status="completed">
+                    <div class="relative">
+                        <img src="https://images.pixabay.com/photo/2016/11/19/14/00/code-1839406_960_720.jpg?auto=compress&cs=tinysrgb&w=400" alt="Math Puzzle Box" class="w-full h-48 object-cover" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+                        <div class="absolute top-3 right-3">
+                            <div class="w-8 h-8 bg-success-500 rounded-full flex items-center justify-center">
+                                <svg class="w-4 h-4 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="p-6">
+                        <h3 class="text-lg font-bold text-text-primary mb-2">Math Puzzle Box</h3>
+                        <p class="text-text-secondary text-sm mb-4">Solve creative mathematical puzzles and brain teasers.</p>
+                        
+                        <div class="flex items-center justify-between mb-4">
+                            <div class="flex items-center space-x-4 text-sm text-text-secondary">
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                    </svg>
+                                    <span>7 min</span>
+                                </div>
+                                <div class="flex items-center space-x-1">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 10V3L4 14h7v7l9-11h-7z"/>
+                                    </svg>
+                                    <span>Beginner</span>
+                                </div>
+                            </div>
+                            <div class="flex items-center space-x-1 text-sm text-success-600">
+                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                </svg>
+                                <span>Completed</span>
+                            </div>
+                        </div>
+
+                        <div class="mb-4">
+                            <div class="progress-bar">
+                                <div class="progress-fill" style="width: 100%"></div>
+                            </div>
+                        </div>
+
+                        <a href="game_interface.html?game=puzzle" class="btn-secondary w-full text-center py-2">
+                            Play Again
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- No Results Message -->
+            <div class="text-center py-12 hidden" id="noResults">
+                <svg class="w-16 h-16 text-text-tertiary mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.172 16.172a4 4 0 015.656 0M9 12h6m-6-4h6m2 5.291A7.962 7.962 0 0112 15c-2.34 0-4.29-1.009-5.824-2.562M15 6.306a7.962 7.962 0 00-6 0m6 0V3a1 1 0 00-1-1h-4a1 1 0 00-1 1v3.306"/>
+                </svg>
+                <h3 class="text-lg font-medium text-text-primary mb-2">No games found</h3>
+                <p class="text-text-secondary">Try adjusting your filters to see more games.</p>
+            </div>
+        </section>
+    </main>
+
+    <!-- Background Decoration -->
+    <div class="fixed bottom-0 left-0 w-64 h-64 opacity-10 pointer-events-none">
+        <img src="https://images.pexels.com/photos/3862132/pexels-photo-3862132.jpeg?auto=compress&cs=tinysrgb&w=400" alt="Mathematics" class="w-full h-full object-cover rounded-tr-full" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1584824486509-112e4181ff6b?q=80&w=2940&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D'; this.onerror=null;" />
+    </div>
+
+    <script>
+        // Auth guard
+        if (window.STEMQUEST_AUTH && !STEMQUEST_AUTH.requireAuth()) {
+            // requireAuth will redirect; stop further execution
+        }
+        // Mobile menu toggle
+        function toggleMobileMenu() {
+            const mobileMenu = document.getElementById('mobileMenu');
+            mobileMenu.classList.toggle('hidden');
+        }
+
+        // Filter functionality
+        const searchInput = document.getElementById('searchInput');
+        const difficultyFilter = document.getElementById('difficultyFilter');
+        const durationFilter = document.getElementById('durationFilter');
+        const statusFilter = document.getElementById('statusFilter');
+        const gamesGrid = document.getElementById('gamesGrid');
+        const noResults = document.getElementById('noResults');
+
+        function filterGames() {
+            const searchTerm = searchInput.value.toLowerCase();
+            const difficulty = difficultyFilter.value;
+            const duration = durationFilter.value;
+            const status = statusFilter.value;
+
+            const gameCards = document.querySelectorAll('.game-card');
+            let visibleCount = 0;
+
+            gameCards.forEach(card => {
+                const title = card.querySelector('h3').textContent.toLowerCase();
+                const cardDifficulty = card.dataset.difficulty;
+                const cardDuration = card.dataset.duration;
+                const cardStatus = card.dataset.status;
+
+                const matchesSearch = title.includes(searchTerm);
+                const matchesDifficulty = !difficulty || cardDifficulty === difficulty;
+                const matchesDuration = !duration || cardDuration === duration;
+                const matchesStatus = !status || cardStatus === status;
+
+                if (matchesSearch && matchesDifficulty && matchesDuration && matchesStatus) {
+                    card.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Show/hide no results message
+            if (visibleCount === 0) {
+                noResults.classList.remove('hidden');
+            } else {
+                noResults.classList.add('hidden');
+            }
+        }
+
+        function resetFilters() {
+            searchInput.value = '';
+            difficultyFilter.value = '';
+            durationFilter.value = '';
+            statusFilter.value = '';
+            filterGames();
+        }
+
+        // Add event listeners
+        searchInput.addEventListener('input', filterGames);
+        difficultyFilter.addEventListener('change', filterGames);
+        durationFilter.addEventListener('change', filterGames);
+        statusFilter.addEventListener('change', filterGames);
+
+        // Language selector functionality
+        document.querySelector('select').addEventListener('change', function(e) {
+            const selectedLang = e.target.value;
+            localStorage.setItem('stemquest_language', selectedLang);
+            console.log('Language changed to:', selectedLang);
+        });
+
+        // Load saved language preference
+        window.addEventListener('load', function() {
+            const savedLang = localStorage.getItem('stemquest_language');
+            if (savedLang) {
+                document.querySelector('select').value = savedLang;
+            }
+        });
+
+        // Simulate offline functionality - replace with real data population
+        window.addEventListener('load', function() {
+            var user = STEMQUEST_STORE.currentUser();
+            if (user) {
+                document.getElementById('statCompletedGames').textContent = user.stats.gamesCompleted || 0;
+                document.getElementById('statGamePoints').textContent = (user.stats.points || 0).toLocaleString();
+                document.getElementById('statGameBadges').textContent = user.badges ? user.badges.length : 0;
+            }
+            
+            // Add loading states to cards initially
+            const gameCards = document.querySelectorAll('.game-card');
+            gameCards.forEach((card, index) => {
+                setTimeout(() => {
+                    card.style.opacity = '0';
+                    card.style.transform = 'translateY(20px)';
+                    card.style.transition = 'all 0.3s ease-out';
+                    
+                    setTimeout(() => {
+                        card.style.opacity = '1';
+                        card.style.transform = 'translateY(0)';
+                    }, index * 100);
+                }, 100);
+            });
+        });
+
+        // Add click tracking for analytics
+        document.querySelectorAll('.game-card a').forEach(link => {
+            link.addEventListener('click', function(e) {
+                const gameTitle = this.closest('.game-card').querySelector('h3').textContent;
+                
+                // Store selected game info
+                sessionStorage.setItem('stemquest_current_game', JSON.stringify({
+                    title: gameTitle,
+                    startTime: new Date().toISOString()
+                }));
+            });
+        });
+    </script>
+</body>
+</html>
