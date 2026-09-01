@@ -7,10 +7,7 @@
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <script
-      type="module"
-      src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fstemquest2030back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"
-    ></script>
+    <script src="../public/data-store.js"></script>
     <script src="../public/auth.js"></script>
   </head>
   <body
@@ -70,7 +67,7 @@
             <div>
               <h1 class="text-lg font-bold text-text-primary">STEM Quest</h1>
               <p class="text-sm text-text-secondary hidden sm:block">
-                Welcome back, Arjun!
+                Welcome back, <span id="headerUserName">student</span>!
               </p>
             </div>
           </div>
@@ -269,7 +266,7 @@
           >
             <div class="flex items-center justify-between">
               <div>
-                <h2 class="text-2xl font-bold mb-2">Welcome back, Arjun! 🚀</h2>
+                <h2 class="text-2xl font-bold mb-2">Welcome back, <span id="welcomeName">student</span>! 🚀</h2>
                 <p class="text-primary-100 mb-4">
                   Ready to continue your STEM adventure? You're doing amazing!
                 </p>
@@ -284,7 +281,7 @@
                         d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
                       />
                     </svg>
-                    <span class="font-semibold">Level 7</span>
+                    <span class="font-semibold">Level <span id="userLevel">1</span></span>
                   </div>
                   <div class="flex items-center space-x-2">
                     <svg
@@ -300,7 +297,7 @@
                         d="M13 10V3L4 14h7v7l9-11h-7z"
                       />
                     </svg>
-                    <span class="font-semibold">2,450 Points</span>
+                    <span class="font-semibold"><span id="userPoints">0</span> Points</span>
                   </div>
                   <div class="flex items-center space-x-2">
                     <svg
@@ -316,7 +313,7 @@
                         d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"
                       />
                     </svg>
-                    <span class="font-semibold">12 Day Streak</span>
+                    <span class="font-semibold"><span id="userStreak">1</span> Day Streak</span>
                   </div>
                 </div>
               </div>
@@ -358,9 +355,9 @@
                 </div>
               </div>
               <div class="progress-bar mb-2">
-                <div class="progress-fill" style="width: 68%"></div>
+                <div class="progress-fill" id="overallProgressBar" style="width: 68%"></div>
               </div>
-              <p class="text-sm text-text-secondary">68% Complete • Grade 8</p>
+              <p class="text-sm text-text-secondary"><span id="overallProgressPct">68</span>% Complete • <span id="userGrade">Grade 8</span></p>
             </div>
 
             <div class="card p-4">
@@ -384,7 +381,7 @@
                   </svg>
                 </div>
               </div>
-              <p class="text-2xl font-bold text-text-primary mb-1">4.5 hrs</p>
+              <p class="text-2xl font-bold text-text-primary mb-1"><span id="weeklyHours">0</span> hrs</p>
               <p class="text-sm text-text-secondary">Learning Time</p>
             </div>
 
@@ -405,7 +402,7 @@
                   </svg>
                 </div>
               </div>
-              <p class="text-2xl font-bold text-text-primary mb-1">15</p>
+              <p class="text-2xl font-bold text-text-primary mb-1" id="badgesEarned">0</p>
               <p class="text-sm text-text-secondary">Badges Earned</p>
             </div>
           </div>
@@ -809,86 +806,8 @@
             <h3 class="font-bold text-text-primary mb-4">
               Recent Achievements
             </h3>
-            <div class="space-y-3">
-              <div class="flex items-center space-x-3">
-                <div
-                  class="w-10 h-10 bg-gradient-to-br from-accent-400 to-accent-600 rounded-full flex items-center justify-center"
-                >
-                  <svg
-                    class="w-5 h-5 text-white"
-                    fill="currentColor"
-                    viewBox="0 0 20 20"
-                  >
-                    <path
-                      d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p class="font-medium text-text-primary text-sm">
-                    Math Master
-                  </p>
-                  <p class="text-xs text-text-secondary">
-                    Completed 10 algebra problems
-                  </p>
-                </div>
-              </div>
-
-              <div class="flex items-center space-x-3">
-                <div
-                  class="w-10 h-10 bg-gradient-to-br from-secondary-400 to-secondary-600 rounded-full flex items-center justify-center"
-                >
-                  <svg
-                    class="w-5 h-5 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 10V3L4 14h7v7l9-11h-7z"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p class="font-medium text-text-primary text-sm">
-                    Speed Learner
-                  </p>
-                  <p class="text-xs text-text-secondary">
-                    Finished game in record time
-                  </p>
-                </div>
-              </div>
-
-              <div class="flex items-center space-x-3">
-                <div
-                  class="w-10 h-10 bg-gradient-to-br from-primary-400 to-primary-600 rounded-full flex items-center justify-center"
-                >
-                  <svg
-                    class="w-5 h-5 text-white"
-                    fill="none"
-                    stroke="currentColor"
-                    viewBox="0 0 24 24"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M5 13l4 4L19 7"
-                    />
-                  </svg>
-                </div>
-                <div>
-                  <p class="font-medium text-text-primary text-sm">
-                    Perfect Score
-                  </p>
-                  <p class="text-xs text-text-secondary">
-                    100% on chemistry quiz
-                  </p>
-                </div>
-              </div>
+            <div class="space-y-3" id="recentAchievements">
+              <p class="text-sm text-text-secondary">No achievements yet. Start playing to earn your first badge!</p>
             </div>
           </div>
 
@@ -919,7 +838,7 @@
                   />
                 </svg>
               </div>
-              <p class="text-2xl font-bold text-text-primary">12 Days</p>
+              <p class="text-2xl font-bold text-text-primary"><span id="streakDays">1</span> Days</p>
               <p class="text-sm text-text-secondary mb-4">
                 Keep it up! You're on fire! 🔥
               </p>
@@ -1100,15 +1019,52 @@
 
       // Quick action functions
       function downloadOfflineContent() {
-        // Mock download functionality
+        var report = buildPortableReport();
+        downloadTextFile('stem-quest-learning-report.txt', report);
         showAchievementNotification("Content downloaded for offline use!");
-        console.log("Downloading offline content...");
       }
 
       function syncProgress() {
-        // Mock sync functionality
+        // Persist is automatic with the data store; this just confirms.
+        STEMQUEST_STORE.currentUser();
         showAchievementNotification("Progress synced successfully!");
-        console.log("Syncing progress...");
+      }
+
+      // Build a human-readable portable report from the current user's data.
+      function buildPortableReport() {
+        var user = STEMQUEST_STORE.currentUser();
+        if (!user) return 'STEM Quest learning report\n\nNo user data available.';
+        var lines = [];
+        lines.push('STEM Quest - Learning Report');
+        lines.push('Student: ' + (user.displayName || user.username));
+        lines.push('Student ID: ' + user.studentId);
+        lines.push('Grade: ' + user.grade);
+        lines.push('Generated: ' + new Date().toLocaleString());
+        lines.push('');
+        lines.push('Total Points: ' + (user.stats ? user.stats.points : 0));
+        lines.push('Games Completed: ' + (user.stats ? user.stats.gamesCompleted : 0));
+        lines.push('Badges Earned: ' + (user.stats ? user.stats.badgesEarned : 0));
+        lines.push('Time Spent: ' + STEMQUEST_STORE.timeSpentFormatted());
+        lines.push('');
+        lines.push('Game History:');
+        (user.gameHistory || []).forEach(function (g, i) {
+          lines.push('  ' + (i + 1) + '. ' + g.game + ' (' + g.subject + ') - ' +
+            'Score ' + g.score + ', ' + Math.round(g.accuracy) + '% accuracy - ' +
+            (g.completed ? 'Completed' : 'In Progress'));
+        });
+        return lines.join('\n');
+      }
+
+      function downloadTextFile(filename, text) {
+        var blob = new Blob([text], { type: 'text/plain' });
+        var url = URL.createObjectURL(blob);
+        var a = document.createElement('a');
+        a.href = url;
+        a.download = filename;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        URL.revokeObjectURL(url);
       }
 
       function openNotifications() {
@@ -1134,36 +1090,74 @@
 
       // Mock data loading and progress updates
       window.addEventListener("load", function () {
-        // Load user data from session storage
-        const userData = JSON.parse(
-          sessionStorage.getItem("stemquest_user") || "{}"
-        );
-        console.log("User data loaded:", userData);
+        var user = STEMQUEST_STORE.currentUser();
+        if (!user) return;
 
-        // Simulate random achievement notification
-        setTimeout(() => {
-          const achievements = [
-            "Daily Login Streak: 12 days!",
-            "Math Wizard: Solved 50 problems!",
-            "Science Explorer: Completed chemistry module!",
-            "Quick Learner: Finished game in record time!",
-          ];
-          const randomAchievement =
-            achievements[Math.floor(Math.random() * achievements.length)];
-          showAchievementNotification(randomAchievement);
-        }, 2000);
+        var name = user.displayName || user.username;
+        document.getElementById("headerUserName").textContent = name.split(' ')[0];
+        document.getElementById("welcomeName").textContent = name.split(' ')[0];
+
+        // Level derived from points (rough scale)
+        var level = Math.max(1, Math.floor((user.stats.points || 0) / 500) + 1);
+        document.getElementById("userLevel").textContent = level;
+        document.getElementById("userPoints").textContent = (user.stats.points || 0).toLocaleString();
+        document.getElementById("userStreak").textContent = user.stats.streak || 1;
+        document.getElementById("streakDays").textContent = user.stats.streak || 1;
+        document.getElementById("badgesEarned").textContent = user.badges ? user.badges.length : 0;
+
+        var grade = user.grade || 8;
+        document.getElementById("userGrade").textContent = "Grade " + grade;
+
+        // Overall progress - simple heuristic based on games completed
+        var totalGames = (user.gameHistory || []).length;
+        var progress = Math.min(95, Math.round((totalGames / 12) * 100));
+        document.getElementById("overallProgressPct").textContent = progress;
+        document.getElementById("overallProgressBar").style.width = progress + "%";
+
+        // Weekly hours from time spent
+        var hrs = Math.round((user.stats.timeSpentSeconds || 0) / 3600 * 10) / 10;
+        document.getElementById("weeklyHours").textContent = hrs;
+
+        // Recent achievements
+        var achContainer = document.getElementById("recentAchievements");
+        var badges = (user.badges || []).slice(-3).reverse();
+        if (badges.length === 0) {
+          achContainer.innerHTML = '<p class="text-sm text-text-secondary">No achievements yet. Start playing to earn your first badge!</p>';
+        } else {
+          achContainer.innerHTML = badges.map(function (b) {
+            return '' +
+              '<div class="flex items-center space-x-3">' +
+                '<div class="w-10 h-10 bg-gradient-to-br from-accent-400 to-accent-600 rounded-full flex items-center justify-center">' +
+                  '<svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">' +
+                    '<path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z"/>' +
+                  '</svg>' +
+                '</div>' +
+                '<div>' +
+                  '<p class="font-medium text-text-primary text-sm">' + b.name + '</p>' +
+                  '<p class="text-xs text-text-secondary">' + b.blurb + '</p>' +
+                '</div>' +
+              '</div>';
+          }).join('');
+        }
+
+        // Friendly first-run achievement notice (only once, only if no badges)
+        if (badges.length === 0) {
+          setTimeout(() => {
+            showAchievementNotification("Welcome! Play your first game to earn badges.");
+          }, 1500);
+        }
       });
 
       // Service Worker registration for offline functionality
       if ("serviceWorker" in navigator) {
         window.addEventListener("load", function () {
           navigator.serviceWorker
-            .register("/sw.js")
+            .register("../sw.js")
             .then(function (registration) {
               console.log("ServiceWorker registration successful");
             })
             .catch(function (err) {
-              console.log("ServiceWorker registration failed");
+              console.log("ServiceWorker registration failed", err);
             });
         });
       }
@@ -1238,9 +1232,5 @@
         });
       }
     </script>
-    <script
-      id="dhws-dataInjector"
-      src="../public/dhws-data-injector.js"
-    ></script>
   </body>
 </html>

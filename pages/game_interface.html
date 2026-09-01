@@ -7,7 +7,7 @@
     <link rel="stylesheet" href="../css/main.css" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-<script type="module" src="https://static.rocket.new/rocket-web.js?_cfg=https%3A%2F%2Fstemquest2030back.builtwithrocket.new&_be=https%3A%2F%2Fapplication.rocket.new&_v=0.1.8"></script>
+<script src="../public/data-store.js"></script>
 <script src="../public/auth.js"></script>
 </head>
 <body class="min-h-screen bg-gradient-to-br from-primary-50 via-background to-secondary-50 overflow-hidden">
@@ -45,8 +45,8 @@
                             </svg>
                         </div>
                         <div>
-                            <h1 class="text-lg font-bold text-text-primary">Math Puzzle Challenge</h1>
-                            <p class="text-sm text-text-secondary">Level 3 - Algebra Basics</p>
+                            <h1 class="text-lg font-bold text-text-primary" id="gameTitle">Math Challenge</h1>
+                            <p class="text-sm text-text-secondary" id="gameSubtitle">Level 1 - Algebra Basics</p>
                         </div>
                     </div>
                 </div>
@@ -266,7 +266,7 @@
                     <!-- Game Problem Display -->
                     <div class="card p-6 lg:p-8 mb-6">
                         <div class="text-center mb-6">
-                            <h2 class="text-2xl lg:text-3xl font-bold text-text-primary mb-2">Solve for x</h2>
+                            <h2 class="text-2xl lg:text-3xl font-bold text-text-primary mb-2" id="problemTitle">Solve for x</h2>
                             <p class="text-text-secondary">Find the value of x in the equation below</p>
                         </div>
 
@@ -497,24 +497,49 @@
             // requireAuth will redirect; stop further execution
         }
         // Game State Management
-        let gameState = {
-            score: 2450,
-            timeRemaining: 342, // seconds
-            lives: 2,
-            currentProblem: 7,
-            totalProblems: 12,
-            isPaused: false,
-            hintsUsed: 2,
-            maxHints: 3
+        var GAME_CONFIG = {
+            fraction:   { title: 'Fraction Adventure',   subject: 'Mathematics', level: 2, total: 8  },
+            algebra:    { title: 'Algebra Quest',        subject: 'Mathematics', level: 3, total: 12 },
+            number:     { title: 'Number Ninja',         subject: 'Mathematics', level: 1, total: 6  },
+            geometry:   { title: 'Geometry Explorer',    subject: 'Mathematics', level: 2, total: 8  },
+            calculus:   { title: 'Calculus Challenge',   subject: 'Mathematics', level: 4, total: 10 },
+            pattern:    { title: 'Pattern Master',       subject: 'Mathematics', level: 1, total: 6  },
+            statistics: { title: 'Statistics Safari',    subject: 'Mathematics', level: 3, total: 8  },
+            puzzle:     { title: 'Math Puzzle Box',      subject: 'Mathematics', level: 1, total: 6  }
         };
 
-        let gameTimer;
-        let calculatorExpression = '';
+        // Determine the currently selected game from the URL, defaulting to algebra.
+        var params = new URLSearchParams(window.location.search);
+        var gameKey = params.get('game') || 'algebra';
+        var config = GAME_CONFIG[gameKey] || GAME_CONFIG.algebra;
+
+        var gameState = {
+            gameKey: gameKey,
+            game: config.title,
+            subject: config.subject,
+            level: config.level,
+            score: 0,
+            timeRemaining: config.total * 45, // seconds per problem
+            lives: 3,
+            currentProblem: 1,
+            totalProblems: config.total,
+            isPaused: false,
+            hintsUsed: 0,
+            maxHints: 3,
+            correctCount: 0,
+            correctAnswer: null,
+            problemType: null
+        };
+
+        var gameTimer;
+        var calculatorExpression = '';
 
         // Initialize game
         window.addEventListener('load', function() {
+            document.getElementById('gameTitle').textContent = config.title;
+            document.getElementById('gameSubtitle').textContent = 'Level ' + config.level + ' - ' + config.subject;
             startGameTimer();
-            loadGameState();
+            generateNewProblem();
             updateDisplay();
         });
 
@@ -524,7 +549,6 @@
                 if (!gameState.isPaused && gameState.timeRemaining > 0) {
                     gameState.timeRemaining--;
                     updateTimerDisplay();
-                    saveGameState();
                 }
                 
                 if (gameState.timeRemaining <= 0) {
@@ -538,10 +562,14 @@
             const seconds = gameState.timeRemaining % 60;
             const timeString = `${minutes.toString().padStart(2, '0')}:${seconds.toString().padStart(2, '0')}`;
             document.getElementById('gameTimer').textContent = timeString;
+            var mobileTimer = document.querySelector('#mobileStatsPanel span.text-warning-600');
+            if (mobileTimer) mobileTimer.textContent = timeString;
         }
 
         function updateDisplay() {
             document.getElementById('gameScore').textContent = gameState.score.toLocaleString();
+            var mobileScore = document.querySelector('#mobileStatsPanel span.text-success-600');
+            if (mobileScore) mobileScore.textContent = gameState.score.toLocaleString();
             updateTimerDisplay();
             updateLivesDisplay();
         }
@@ -561,7 +589,6 @@
         function pauseGame() {
             gameState.isPaused = true;
             document.getElementById('pauseModal').classList.remove('hidden');
-            saveGameState();
         }
 
         function resumeGame() {
@@ -572,91 +599,141 @@
         function restartGame() {
             if (confirm('Are you sure you want to restart this level? Your current progress will be lost.')) {
                 gameState = {
+                    gameKey: gameKey,
+                    game: config.title,
+                    subject: config.subject,
+                    level: config.level,
                     score: 0,
-                    timeRemaining: 600,
+                    timeRemaining: config.total * 45,
                     lives: 3,
                     currentProblem: 1,
-                    totalProblems: 12,
+                    totalProblems: config.total,
                     isPaused: false,
                     hintsUsed: 0,
-                    maxHints: 3
+                    maxHints: 3,
+                    correctCount: 0,
+                    correctAnswer: null,
+                    problemType: null
                 };
-                updateDisplay();
                 document.getElementById('pauseModal').classList.add('hidden');
+                if (gameTimer) clearInterval(gameTimer);
+                startGameTimer();
+                updateDisplay();
                 generateNewProblem();
             }
         }
 
         function exitGame() {
             if (confirm('Are you sure you want to exit? Your progress will be saved.')) {
-                saveGameState();
                 window.location.href = 'student_dashboard.html';
             }
         }
 
         // Answer Checking
         function checkAnswer() {
-            const answerInput = document.getElementById('answerInput');
-            const userAnswer = parseFloat(answerInput.value.trim());
-            const correctAnswer = 9; // For the example problem 3x + 15 = 42
-            
-            const feedback = document.getElementById('answerFeedback');
-            
+            var answerInput = document.getElementById('answerInput');
+            var userAnswer = parseFloat(answerInput.value.trim());
+            var correctAnswer = gameState.correctAnswer;
+
+            var feedback = document.getElementById('answerFeedback');
+
             if (isNaN(userAnswer)) {
                 showFeedback('Please enter a valid number.', 'error');
                 return;
             }
-            
+
+            var elapsedSeconds = Math.abs((Date.now() - gameState.problemStart) / 1000);
+
             if (Math.abs(userAnswer - correctAnswer) < 0.01) {
-                // Correct answer
-                gameState.score += 100;
-                gameState.currentProblem++;
-                showFeedback('Correct! Well done!', 'success');
-                showAchievement('Problem Solved!', 'Great work solving that equation!');
-                
+                // Correct answer - award points based on speed
+                var bonus = Math.max(50, 100 - Math.round(elapsedSeconds));
+                gameState.score += 100 + bonus;
+                gameState.correctCount++;
+                showFeedback('Correct! Well done! +' + (100 + bonus) + ' points', 'success');
+                showAchievement('Correct!', 'Great work solving that!');
+
                 setTimeout(() => {
-                    if (gameState.currentProblem > gameState.totalProblems) {
+                    if (gameState.currentProblem >= gameState.totalProblems) {
                         endGame('completed');
                     } else {
+                        gameState.currentProblem++;
                         generateNewProblem();
                     }
-                }, 2000);
+                }, 1200);
             } else {
                 // Wrong answer
                 gameState.lives--;
-                showFeedback(`Incorrect. The answer is ${correctAnswer}. Try the next problem!`, 'error');
-                
+                showFeedback('Incorrect. The answer is ' + correctAnswer + '.', 'error');
+                showAchievement('Keep Trying!', 'Let\'s get the next one right!');
+
                 if (gameState.lives <= 0) {
-                    setTimeout(() => endGame('no_lives'), 2000);
+                    setTimeout(() => endGame('no_lives'), 1500);
                 } else {
-                    setTimeout(() => generateNewProblem(), 2000);
+                    setTimeout(() => {
+                        gameState.currentProblem++;
+                        generateNewProblem();
+                    }, 1500);
                 }
             }
-            
+
             updateDisplay();
-            saveGameState();
         }
 
         function showFeedback(message, type) {
-            const feedback = document.getElementById('answerFeedback');
+            var feedback = document.getElementById('answerFeedback');
             feedback.textContent = message;
-            feedback.className = `mt-3 text-center text-sm font-medium ${
-                type === 'success' ? 'text-success-600' : 
-                type === 'error' ? 'text-error-600' : 'text-text-secondary'
-            }`;
+            feedback.className = 'mt-3 text-center text-sm font-medium ' +
+                (type === 'success' ? 'text-success-600' :
+                 type === 'error' ? 'text-error-600' : 'text-text-secondary');
             feedback.classList.remove('hidden');
         }
 
         function generateNewProblem() {
-            // Generate a new random algebra problem
-            const a = Math.floor(Math.random() * 9) + 2;
-            const b = Math.floor(Math.random() * 20) + 5;
-            const x = Math.floor(Math.random() * 10) + 1;
-            const result = a * x + b;
-            
-            document.getElementById('mathProblem').textContent = `${a}x + ${b} = ${result}`;
+            var a, b, x, c;
+            gameState.problemType = Math.floor(Math.random() * 3);
+            gameState.problemStart = Date.now();
+
+            switch (gameState.problemType) {
+                case 0: // ax + b = c
+                    a = Math.floor(Math.random() * 9) + 2;
+                    x = Math.floor(Math.random() * 10) + 1;
+                    b = Math.floor(Math.random() * 20) + 5;
+                    c = a * x + b;
+                    gameState.correctAnswer = x;
+                    document.getElementById('mathProblem').textContent = a + 'x + ' + b + ' = ' + c;
+                    document.getElementById('problemTitle').textContent = 'Solve for x';
+                    break;
+                case 1: // ax - b = c
+                    a = Math.floor(Math.random() * 9) + 2;
+                    x = Math.floor(Math.random() * 10) + 1;
+                    b = Math.floor(Math.random() * 15) + 2;
+                    c = a * x - b;
+                    gameState.correctAnswer = x;
+                    document.getElementById('mathProblem').textContent = a + 'x - ' + b + ' = ' + c;
+                    document.getElementById('problemTitle').textContent = 'Solve for x';
+                    break;
+                default: // a + b = ?  (addition)
+                    a = Math.floor(Math.random() * 50) + 10;
+                    b = Math.floor(Math.random() * 50) + 10;
+                    gameState.correctAnswer = a + b;
+                    document.getElementById('mathProblem').textContent = a + ' + ' + b + ' = ?';
+                    document.getElementById('problemTitle').textContent = 'Find the sum';
+                    break;
+            }
+
             document.getElementById('answerInput').value = '';
             document.getElementById('answerFeedback').classList.add('hidden');
+            showProblemProgress();
+        }
+
+        function showProblemProgress() {
+            var pct = Math.round((gameState.currentProblem - 1) / gameState.totalProblems * 100);
+            var el = document.querySelector('#sidePanel .progress-fill');
+            if (el) el.style.width = pct + '%';
+            var label = document.querySelector('#sidePanel .text-xs.text-text-tertiary');
+            if (label) label.textContent = (gameState.currentProblem - 1) + ' of ' + gameState.totalProblems + ' problems solved';
+            var completion = document.querySelector('#sidePanel .flex.items-center.justify-between.text-sm .font-medium');
+            if (completion) completion.textContent = pct + '%';
         }
 
         function skipProblem() {
@@ -664,7 +741,8 @@
                 gameState.currentProblem++;
                 generateNewProblem();
                 updateDisplay();
-                saveGameState();
+            } else {
+                endGame('completed');
             }
         }
 
@@ -679,19 +757,21 @@
                 alert('No more hints available for this level!');
                 return;
             }
-            
+
             gameState.hintsUsed++;
-            const hints = [
-                'Start by isolating the variable term on one side.',
-                'Subtract the constant from both sides first.',
-                'Then divide both sides by the coefficient of x.'
-            ];
-            
-            const hintIndex = Math.min(gameState.hintsUsed - 1, hints.length - 1);
-            alert(`Hint ${gameState.hintsUsed}: ${hints[hintIndex]}`);
-            
+            var hint;
+            if (gameState.problemType === 2) {
+                hint = 'Add the two numbers together to find the sum.';
+            } else {
+                var hints = [
+                    'Start by isolating the variable term on one side.',
+                    'Subtract the constant from both sides first.',
+                    'Then divide both sides by the coefficient of x.'
+                ];
+                hint = hints[Math.min(gameState.hintsUsed - 1, hints.length - 1)];
+            }
+            alert('Hint ' + gameState.hintsUsed + ': ' + hint);
             updateDisplay();
-            saveGameState();
         }
 
         // Achievement System
@@ -731,8 +811,8 @@
 
         // Calculator Functions
         function calculatorInput(value) {
-            const display = document.getElementById('calculatorDisplay');
-            if (display.textContent === '0') {
+            var display = document.getElementById('calculatorDisplay');
+            if (display.textContent === '0' || display.textContent === 'Error') {
                 display.textContent = value;
             } else {
                 display.textContent += value;
@@ -745,67 +825,92 @@
             calculatorExpression = '';
         }
 
-        function calculateResult() {
-            try {
-                const result = eval(calculatorExpression.replace('×', '*'));
-                document.getElementById('calculatorDisplay').textContent = result;
-                calculatorExpression = result.toString();
-            } catch (error) {
-                document.getElementById('calculatorDisplay').textContent = 'Error';
-                calculatorExpression = '';
-            }
-        }
+        // Safe arithmetic evaluator (no eval) supporting + - * /
+        function safeEvaluate(expr) {
+            // Tokenize numbers and operators
+            var tokens = expr.match(/\d+(?:\.\d+)?|[+\-*/]/g);
+            if (!tokens) return NaN;
 
-        // Local Storage Management
-        function saveGameState() {
-            try {
-                localStorage.setItem('stemquest_game_state', JSON.stringify({
-                    ...gameState,
-                    lastSaved: new Date().toISOString(),
-                    gameType: 'math_puzzle',
-                    level: 3
-                }));
-            } catch (error) {
-                console.error('Failed to save game state:', error);
-            }
-        }
-
-        function loadGameState() {
-            try {
-                const saved = localStorage.getItem('stemquest_game_state');
-                if (saved) {
-                    const savedState = JSON.parse(saved);
-                    // Only load if it's the same game type and level
-                    if (savedState.gameType === 'math_puzzle' && savedState.level === 3) {
-                        gameState = { ...gameState, ...savedState };
-                        updateDisplay();
-                    }
+            // First pass: handle * and /
+            var output = [];
+            for (var i = 0; i < tokens.length; i++) {
+                var t = tokens[i];
+                if (t === '*' || t === '/') {
+                    var left = parseFloat(output.pop());
+                    var right = parseFloat(tokens[++i]);
+                    if (isNaN(left) || isNaN(right) || (t === '/' && right === 0)) return NaN;
+                    output.push(t === '*' ? left * right : left / right);
+                } else {
+                    output.push(t);
                 }
-            } catch (error) {
-                console.error('Failed to load game state:', error);
+            }
+
+            // Second pass: handle + and -
+            var result = parseFloat(output[0]) || 0;
+            for (var j = 1; j < output.length; j += 2) {
+                var op = output[j];
+                var num = parseFloat(output[j + 1]);
+                if (isNaN(num)) return NaN;
+                if (op === '+') result += num;
+                else if (op === '-') result -= num;
+            }
+            return result;
+        }
+
+        function calculateResult() {
+            var display = document.getElementById('calculatorDisplay');
+            var result = safeEvaluate(calculatorExpression.replace('×', '*'));
+            if (isNaN(result)) {
+                display.textContent = 'Error';
+                calculatorExpression = '';
+            } else {
+                var rounded = Math.round(result * 10000) / 10000;
+                display.textContent = rounded;
+                calculatorExpression = rounded.toString();
             }
         }
 
+        // Game result handling - records the outcome to the data store so the
+        // dashboard, profile and progress pages all reflect real progress.
         function endGame(reason) {
             clearInterval(gameTimer);
-            saveGameState();
-            
+
+            var elapsedTotal = Math.round((config.total * 45 - gameState.timeRemaining));
+            var accuracy = gameState.totalProblems > 0
+                ? Math.round((gameState.correctCount / gameState.totalProblems) * 100)
+                : 0;
+
+            // Record the game result in the shared data store.
+            var newBadge = STEMQUEST_STORE.recordGameResult({
+                game: config.title,
+                subject: config.subject,
+                score: gameState.score,
+                accuracy: accuracy,
+                durationSec: Math.max(elapsedTotal, 1),
+                completed: reason === 'completed'
+            });
+
             let message = '';
+            let goTo = 'game_selection.html';
             switch (reason) {
                 case 'completed':
-                    message = 'Congratulations! You completed the level!';
+                    message = 'Congratulations! You completed the level! You earned ' + gameState.score + ' points.';
                     break;
                 case 'timeout':
                     message = 'Time\'s up! Don\'t worry, you can try again.';
                     break;
                 case 'no_lives':
-                    message = 'Game over! Keep practicing and you\'ll improve.';
+                    message = 'Game over! You made it through ' + gameState.correctCount + ' problems correctly.';
                     break;
             }
-            
+
+            if (newBadge) {
+                message = message + '\n\nNew badge earned: ' + newBadge.name + '!';
+            }
+
             setTimeout(() => {
                 alert(message);
-                window.location.href = 'game_selection.html';
+                window.location.href = goTo;
             }, 1000);
         }
 
@@ -842,9 +947,6 @@
             }
         });
 
-        // Auto-save every 30 seconds
-        setInterval(saveGameState, 30000);
-
         // Handle page visibility change (pause when tab is hidden)
         document.addEventListener('visibilitychange', function() {
             if (document.hidden && !gameState.isPaused) {
@@ -852,6 +954,5 @@
             }
         });
     </script>
-<script id="dhws-dataInjector" src="../public/dhws-data-injector.js"></script>
 </body>
 </html>
